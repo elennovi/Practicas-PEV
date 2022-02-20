@@ -15,6 +15,11 @@ public abstract class Individuo {
 			genes[i] = random.nextBoolean();
 	}
 	
+	// La función que evalua al fitness del individuo
+	public int evaluar() {
+		// A COMPLETAR
+		return 0;
+	}
 	
 	
 }
