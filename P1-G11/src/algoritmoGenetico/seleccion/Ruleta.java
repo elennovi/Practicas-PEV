@@ -1,6 +1,4 @@
 package algoritmoGenetico.seleccion;
-import java.util.Random;
-
 import algoritmoGenetico.individuos.Individuo;
 
 public class Ruleta extends Seleccion{
@@ -45,10 +43,9 @@ public class Ruleta extends Seleccion{
 			acumuladas[cont] = acumuladas[cont - 1] + proporciones[cont];
 		
 		// Ahora obtenemos numeros aleatorios
-		Random rand = new Random();
 		for (int i = 0; i < seleccionados; i++) {
 			// Un número aleatorio entre 0 y 1 incluidos
-			double aleat = rand.nextDouble();
+			double aleat = Math.random();
 			// Ahora recorremos las acumuladas hasta que encontramos una 
 			// que cumpla las caracteristicas
 			double ant = 0;

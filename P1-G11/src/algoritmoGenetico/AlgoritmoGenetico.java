@@ -3,6 +3,8 @@ import algoritmoGenetico.cruce.*;
 import algoritmoGenetico.mutar.*;
 import algoritmoGenetico.seleccion.*;
 import algoritmoGenetico.funciones.*;
+import algoritmoGenetico.individuos.Individuo;
+import algoritmoGenetico.individuos.IndividuoBool;
 
 public class AlgoritmoGenetico {
 	private Seleccion fSelec;
@@ -15,6 +17,8 @@ public class AlgoritmoGenetico {
 	private double prec;
 	private int numGen;
 	private Funcion f;
+	private Individuo[] poblacion;
+	
 	// Falta añadir los atributos de cada funcion algoritmo genetico
 	
   /*
@@ -25,7 +29,7 @@ public class AlgoritmoGenetico {
 
    * */
 	
-	AlgoritmoGenetico(int tamPoblacion, double prec, int numGen, Seleccion fSelec, Cruce fCruce, Mutacion fMutacion, 
+	public AlgoritmoGenetico(int tamPoblacion, double prec, int numGen, Seleccion fSelec, Cruce fCruce, Mutacion fMutacion, 
 			double pMutacion, double pCruce, double elitismo, Funcion f) {
 		this.tamPoblacion = tamPoblacion;
 		this.prec = prec;
@@ -37,5 +41,16 @@ public class AlgoritmoGenetico {
 		this.pCruce = pCruce;
 		this.elitismo = elitismo;
 		this.f = f;
+		this.poblacion = new Individuo[tamPoblacion];
+		run();
+	}
+	
+	public void run() {
+		// Generamos una poblacion inicial
+		for (int i = 0; i < tamPoblacion; i++) {
+			// CALCULAR LA LONGITUD TOTAL DE LOS GENES
+			// Individuo i = new IndividuoBool();
+		}
+		
 	}
 }
