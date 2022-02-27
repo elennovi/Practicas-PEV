@@ -13,10 +13,10 @@ public class CruceMonopunto extends Cruce{
 		IndividuoBool[] hijos = new IndividuoBool[2];
 		
 		// Creamos un individuo con genes booleanos del tamaño del padre
-		hijos[0] = new IndividuoBool(papa.getL());
+		hijos[0] = new IndividuoBool(papa.getF());
 
 		// Creamos un individuo con genes booleanos del tamaño de la madre
-		hijos[1] = new IndividuoBool(mama.getL());;
+		hijos[1] = new IndividuoBool(mama.getF());;
 
 		// Generamos un número entero y por ese punto dividimos a los progenitores
 		Random r = new Random();

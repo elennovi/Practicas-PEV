@@ -1,11 +1,13 @@
 package algoritmoGenetico.individuos;
 
+import algoritmoGenetico.funciones.Funcion;
+
 public class IndividuoDouble extends Individuo{
 	private double[] genesR;
 	
-	public IndividuoDouble(int l){
-		super(l);
-		genesR = new double[l];
+	public IndividuoDouble(Funcion f){
+		super(f);
+		genesR = new double[f.getLTotal()];
 	}
 	
 	// Getters y setters para los valores de los genes
@@ -17,7 +19,7 @@ public class IndividuoDouble extends Individuo{
 		return genesR[i];
 	}
 	
-	public int evaluar() {
+	public double evaluar() {
 		// TODO Auto-generated method stub
 		return 0;
 	}

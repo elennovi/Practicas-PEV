@@ -1,22 +1,26 @@
 package algoritmoGenetico.individuos;
 
-import java.util.Random;
+import algoritmoGenetico.funciones.Funcion;
 
 public abstract class Individuo {
-	private int lTotal;
+	private Funcion f;
 	
-	Individuo(int l){
-		lTotal = l;
+	Individuo(Funcion f){
+		this.f = f;
 	}
 	
 	// La función que evalua al fitness del individuo
-	public abstract int evaluar();
+	public abstract double evaluar();
 	
 	// La funcion que inicializa aleatoriamente todos los genes del individuo
 	public abstract void initGenesAleatorio();
 	
 	public int getL() {
-		return lTotal;
+		return f.getLTotal();
+	}
+	
+	public Funcion getF() {
+		return f;
 	}
 }
 

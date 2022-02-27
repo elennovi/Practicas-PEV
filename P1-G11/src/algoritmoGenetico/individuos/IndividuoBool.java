@@ -2,13 +2,15 @@ package algoritmoGenetico.individuos;
 
 import java.util.Random;
 
+import algoritmoGenetico.funciones.Funcion;
+
 public class IndividuoBool extends Individuo {
 	private boolean[] genesB;
 	
 	
-	public IndividuoBool(int l){
-		super(l);
-		genesB = new boolean[l];
+	public IndividuoBool(Funcion f){
+		super(f);
+		genesB = new boolean[f.getLTotal()];
 	}
 	
 	// Genera unos genes booleanos aleatoriamente
@@ -29,8 +31,16 @@ public class IndividuoBool extends Individuo {
 		return genesB[i];
 	}
 	
-	public int evaluar() {
-		// TODO Auto-generated method stub
+	public double evaluar() {
+		// Conseguimos los valores de las variables en su forma real
+		
+		// Si alguno de ellos es superior al maximo (porque en su valor binario quepan
+		// mas numeros) debemos penalizarlo para que no se tenga en cuenta
+		
+		// A continuacion evaluamos con la funcion que queremos maximizar/minimizar
+		
+		// Devolvemos el valor de la evaluacion
+		
 		return 0;
 	}
 }

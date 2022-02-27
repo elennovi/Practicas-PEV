@@ -5,6 +5,7 @@ import algoritmoGenetico.individuos.Individuo;
 public class Funcion1 extends Funcion {
 	private static final int NUM_VAR = 2;
 	private static final double[] MAXIMOS = {12.1, 5.8}, MINIMOS = {-3.0, 4.1};
+	private static final boolean maximiza = true;
 	
 	// El constructor que crea la funcion 1
 	Funcion1(double prec) {
@@ -18,6 +19,8 @@ public class Funcion1 extends Funcion {
 		super.setL(aux);
 		// Calculamos la longitud total como la suma de las longitudes de las variables que lo componen:
 		super.setLTotal(super.sumaL());
+		// Indicamos si es una funcion que se pretende maximizar o no
+		super.setMaximiza(maximiza);
 	}
 	
 	// Funcion que representa la formula de dicha funcion

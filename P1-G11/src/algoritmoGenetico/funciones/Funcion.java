@@ -11,6 +11,7 @@ public abstract class Funcion {
 	private double[] maximos; // Los valores maximos que toman todas las variables
 	private double[] minimos; // Los valores minimos que toman todas las variables
 	
+	private boolean maximiza; // Indica si es una funcion que maximiza
 	
 	public abstract double evaluar(Individuo i);
 	
@@ -67,5 +68,13 @@ public abstract class Funcion {
 	
 	public void setLTotal(int lTotal) {
 		this.lTotal = lTotal;
+	}
+
+	public void setMaximiza(boolean value) {
+		maximiza = value;
+	}
+
+	public boolean maximiza() {
+		return maximiza;
 	}
 }

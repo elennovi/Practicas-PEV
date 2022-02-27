@@ -21,7 +21,7 @@ public class Torneo extends Seleccion{
 	}
 	
 	Individuo torneo2(Individuo uno, Individuo dos, boolean maxim, double elitismo) {
-		int ev1 = uno.evaluar(), ev2 = dos.evaluar();
+		double ev1 = uno.evaluar(), ev2 = dos.evaluar();
 		double d = Math.random();
 		//Si se coge el mejor
 		if(d > elitismo) {
