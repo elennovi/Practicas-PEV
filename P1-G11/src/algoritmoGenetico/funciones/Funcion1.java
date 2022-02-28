@@ -1,7 +1,5 @@
 package algoritmoGenetico.funciones;
 
-import algoritmoGenetico.individuos.Individuo;
-
 public class Funcion1 extends Funcion {
 	private static final int NUM_VAR = 2;
 	private static final double[] MAXIMOS = {12.1, 5.8}, MINIMOS = {-3.0, 4.1};
@@ -24,8 +22,7 @@ public class Funcion1 extends Funcion {
 	}
 	
 	// Funcion que representa la formula de dicha funcion
-	public double evaluar(Individuo i) {
-		// A COMPLETAR
-		return 0.0;
+	public double evaluar(double[] vars) {
+		return 21.5 + vars[0] * Math.sin(4 * Math.PI * vars[0]) + vars[1] * Math.sin(20 * Math.PI * vars[1]);
 	}
 }

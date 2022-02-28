@@ -13,7 +13,7 @@ public abstract class Funcion {
 	
 	private boolean maximiza; // Indica si es una funcion que maximiza
 	
-	public abstract double evaluar(Individuo i);
+	public abstract double evaluar(double[] vars);
 	
 	// Calcula la longitud en bits que deberia tener una variable double
 	public int calculaL(double max, double min, double PREC) {
@@ -62,6 +62,10 @@ public abstract class Funcion {
 		this.l = l;
 	}
 	
+	public int getLAt(int pos) {
+		return l[pos];
+	}
+	
 	public int getLTotal() {
 		return lTotal;
 	}
@@ -76,5 +80,23 @@ public abstract class Funcion {
 
 	public boolean maximiza() {
 		return maximiza;
+	}
+
+	public double[] valorRealVariables(boolean[][] valuesB) {
+		double[] valuesR = new double[nVar];
+		for (int i = 0; i < nVar; i++)
+			valuesR[i] = minimos[i] + bin2dec(valuesB[i]) * ((maximos[i] - minimos[i]) / (2 ^ lTotal - 1));
+		return valuesR;
+	}
+	
+	private int bin2dec(boolean[] bin) {
+		int dec = 0;
+		int expo = bin.length - 1;
+		for (boolean b: bin) {
+			if (b)
+				dec += 2 ^ expo;
+			expo--;
+		}
+		return dec;
 	}
 }

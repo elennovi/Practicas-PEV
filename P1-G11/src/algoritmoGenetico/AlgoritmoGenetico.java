@@ -46,6 +46,16 @@ public class AlgoritmoGenetico {
 	}
 	
 	public void run() {
+		// Generamos la poblacion inicial aleatoriamente
+		generaPoblacionInicial();
+		
+		// Ahora ejecutamos el algoritmo genetico tantas veces como numGeneraciones se pidan
+		for (int i = 0; i < numGen; i++)
+			ejecutaAlgoritmoGenetico();
+		
+	}
+	
+	public void generaPoblacionInicial() {
 		// Generamos una poblacion inicial
 		for (int i = 0; i < tamPoblacion; i++) {
 			// Generamos un individuo booleano
@@ -54,13 +64,21 @@ public class AlgoritmoGenetico {
 			ind.initGenesAleatorio();
 			poblacion[i] = ind;
 		}
-		
+	}
+	
+	public void ejecutaAlgoritmoGenetico() {
 		// Una vez ya tenemos la poblacion inicial la evaluamos
 		double total = poblacion[0].evaluar();
 		double mejor = total;
 		for (int i = 1; i < tamPoblacion; i++) {
 			// Nos ayudará a calcular la media de la poblacion actual
-			total += poblacion[i].evaluar();
+			double evaluacion = poblacion[i].evaluar();
+			total += evaluacion;
+			// Si es mejor que la que teniamos lo actualizamos
+			if (f.maximiza() && evaluacion > mejor)
+				mejor = evaluacion;
+			else if (!f.maximiza() && evaluacion < mejor)
+				mejor = evaluacion;
 		}
 		
 		// Mostramos el valor de la poblacion actual
@@ -72,12 +90,16 @@ public class AlgoritmoGenetico {
 		// Recorremos los seleccionados y guardamos en un array los que hayan pasado
 		// la probabilidad de cruce
 		IndividuoBool[] cruzan = new IndividuoBool[tamPoblacion];
+		// Almacena las posiciones de los individuos que seleccionamos
+		int[] posiciones = new int[tamPoblacion];
+
 		int numCruzan = 0;
 		for (int i = 0; i < tamPoblacion; i++) {
 			double cruza = Math.random();
 			// Si debe cruzarse
 			if (cruza < pCruce) {
 				cruzan[numCruzan] = (IndividuoBool) seleccionados[i];
+				posiciones[numCruzan] = i;
 				numCruzan++;
 			}
 		}
@@ -91,8 +113,17 @@ public class AlgoritmoGenetico {
 			IndividuoBool[] hijos = fCruce.cruzar(cruzan[i], cruzan[i + 1]);
 			// Nos quedamos con los hijos siempre independientemente de si son peores
 			// que sus padres 
+			seleccionados[posiciones[i]] = hijos[0];
+			seleccionados[posiciones[i + 1]] = hijos[1];
 		}
 		
-		// Mutamos
+		// Mutamos sobre el array de seleccionados en funcion de la probabilidad de mutacion
+		for (int i = 0; i < tamPoblacion;i++) {
+			// Si debe mutar
+			fMutacion.mutar((IndividuoBool) seleccionados[i]);
+		}
+		
+		// Ahora tenemos la nueva poblacion en seleccionados
+		poblacion = seleccionados;
 	}
 }

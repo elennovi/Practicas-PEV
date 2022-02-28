@@ -32,15 +32,32 @@ public class IndividuoBool extends Individuo {
 	}
 	
 	public double evaluar() {
-		// Conseguimos los valores de las variables en su forma real
+		Funcion f = super.getF();
+		// Conseguimos arrays de booleanos que se corresponden con los valores en binario
+		// de cada variable
+		boolean[][] valuesB = new boolean[f.getnVar()][];
+		int posCromosoma = 0;
+		for (int i = 0; i < f.getnVar(); i++) {
+			valuesB[i] = new boolean[f.getLAt(i)];
+			for (int j = 0; j < f.getLAt(i); j++) {
+				valuesB[i][j] = genesB[posCromosoma];
+				posCromosoma++;
+			}
+		}
 		
-		// Si alguno de ellos es superior al maximo (porque en su valor binario quepan
-		// mas numeros) debemos penalizarlo para que no se tenga en cuenta
+		// Ahora conseguimos los valores en valor real
+		double[] valuesR = f.valorRealVariables(valuesB);
 		
-		// A continuacion evaluamos con la funcion que queremos maximizar/minimizar
+		// Si alguno de ellos es superior al maximo es el propio maximo de la variable
+		for (int i = 0; i < f.getnVar(); i++) {
+			double v = valuesR[i];
+			// Si es mas grande que el maximo suponemos que es el maximo
+			if (v > f.getMaximoAt(i))
+				valuesR[i] = f.getMaximoAt(i);
+		}
 		
-		// Devolvemos el valor de la evaluacion
-		
-		return 0;
+		// A continuacion evaluamos con la funcion que queremos maximizar/minimizar con los
+		// valores reales y ese es su fitness
+		return f.evaluar(valuesR);
 	}
 }
