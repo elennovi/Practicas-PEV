@@ -17,7 +17,7 @@ public abstract class Funcion {
 	
 	// Calcula la longitud en bits que deberia tener una variable double
 	public int calculaL(double max, double min, double PREC) {
-		return (int) Math.ceil(log(1 + (max - min)/ PREC, 2));
+		return (int) (log(1 + (max - min)/ PREC, 2));
 	}
 	
 	// Calcula el logaritmo en base 2
@@ -84,19 +84,18 @@ public abstract class Funcion {
 
 	public double[] valorRealVariables(boolean[][] valuesB) {
 		double[] valuesR = new double[nVar];
-		for (int i = 0; i < nVar; i++)
-			valuesR[i] = minimos[i] + bin2dec(valuesB[i]) * ((maximos[i] - minimos[i]) / (2 ^ lTotal - 1));
+		for (int i = 0; i < nVar; i++) {
+			valuesR[i] = minimos[i] + bin2dec(valuesB[i]) * ((maximos[i] - minimos[i]) / (Math.pow(2, l[i]) - 1));
+		}
 		return valuesR;
 	}
 	
 	private int bin2dec(boolean[] bin) {
-		int dec = 0;
-		int expo = bin.length - 1;
+		String s = "";
 		for (boolean b: bin) {
-			if (b)
-				dec += 2 ^ expo;
-			expo--;
+			if (b) s+= "1";
+			else s+= "0";
 		}
-		return dec;
+		return Integer.parseInt(s,2);
 	}
 }

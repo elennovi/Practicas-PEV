@@ -7,7 +7,7 @@ import algoritmoGenetico.individuos.IndividuoBool;
 public class Mutacion {
 	private double probMutar;
 	
-	Mutacion(double p){
+	public Mutacion(double p){
 		probMutar = p;
 	}
 	

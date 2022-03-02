@@ -6,7 +6,7 @@ public class Funcion1 extends Funcion {
 	private static final boolean maximiza = true;
 	
 	// El constructor que crea la funcion 1
-	Funcion1(double prec) {
+	public Funcion1(double prec) {
 		// Inicializamos el número de variables
 		super.setnVar(NUM_VAR);
 		// Inicializamos los valores maximos y minimos de las dos variables para este tipo de individuo
