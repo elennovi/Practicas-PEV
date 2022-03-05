@@ -2,7 +2,6 @@ package algoritmoGenetico.cruce;
 
 import java.util.Random;
 
-import algoritmoGenetico.individuos.Individuo;
 import algoritmoGenetico.individuos.IndividuoBool;
 import algoritmoGenetico.individuos.IndividuoDouble;
 

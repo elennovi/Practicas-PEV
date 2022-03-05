@@ -1,7 +1,6 @@
 package algoritmoGenetico.mutar;
 import java.util.Random;
 
-import algoritmoGenetico.individuos.Individuo;
 import algoritmoGenetico.individuos.IndividuoBool;
 
 public class Mutacion {

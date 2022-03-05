@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.swing.SwingUtilities;
-
 import algoritmoGenetico.cruce.*;
 import algoritmoGenetico.mutar.*;
 import algoritmoGenetico.seleccion.*;
@@ -25,6 +23,10 @@ public class AlgoritmoGenetico {
 	private Individuo[] poblacion;
 	private int numElite;
 	private Ventana window;
+	private double[] generaciones;
+	private double[] mejores;
+	private double[] medias;
+	
 	
 	// Falta añadir los atributos de cada funcion algoritmo genetico
 	
@@ -47,12 +49,18 @@ public class AlgoritmoGenetico {
 		this.elitismo = elitismo;
 		// Calculamos el número de individuos que van a formar parte de la élite
 		numElite = (int) (this.tamPoblacion * (this.elitismo / 100));
-		// PROVISIONAL
-		System.out.println(numElite);
+		generaciones = new double[this.numGen];
+		mejores = new double[this.numGen];
+		medias = new double[this.numGen];		
+		// Falta el array que calcula el mejor absoluto
+		for (int i = 0; i < this.numGen; i++) {
+			generaciones[i] = (i + 1);
+			mejores[i] = 0;
+			medias[i] = 0;
+		}
 		this.f = f;
 		this.poblacion = new Individuo[tamPoblacion];
 		this.window = window;
-		run();
 	}
 	
 	public void run() {
@@ -137,18 +145,44 @@ public class AlgoritmoGenetico {
 			}
 	    });
 		
+		// PROVISIONAL:
+//		System.out.println("Los individuos de la generación " + nGen + " ordenados por fitness son: ");
+//		for (int i = 0; i < posF.size(); i++)
+//			System.out.println("Individuo " + posF.get(i).getPos() + " y con fitness " + posF.get(i).getFitness());
+		
 		// Creamos un array aque contenga a los individos de la élite (los mejores, aquellos que no queremos
 		// perder)
 		Individuo[] elite = new IndividuoBool[numElite];
 		
 		// Nos quedamos con tantos individuos como el porcentaje elite nos indique
-		for (int i = 0; i < numElite; i++)
-			elite[i] = poblacion[posF.get(i).getPos()];
+		for (int i = 0; i < numElite; i++) {
+			IndividuoBool nuevo = new IndividuoBool(f);
+			for(int j = 0; j < f.getLTotal(); j++)
+				nuevo.setAt(j, ((IndividuoBool) poblacion[posF.get(i).getPos()]).getAt(j));
+			elite[i] = nuevo;
+		}
+		
+		//PROVISIONAL:
+//		System.out.println("La élite escogida para la generacion" + nGen + ":");
+//		for (int i = 0; i < numElite; i++)
+//			System.out.println("Individuo con fitness: " + elite[i].evaluar());
 		
 		// Indicamos a la ventana que se han evaluado la nueva poblacion
-		window.actualizar(nGen, mejor, (total / tamPoblacion));
+		mejores[nGen] = mejor;
+		medias[nGen] = (total / tamPoblacion);
+		
+		// Esperamos unos segundos para retrasar la ejecución
+		try {
+		    Thread.sleep(10);
+		} catch (InterruptedException ie) {
+		    Thread.currentThread().interrupt();
+		}
+		
+		// Le decimos a la ventana que se actualice
+		window.actualizar(mejores, medias);
 		
 		// Mostramos el valor de la poblacion actual
+		// PROVISIONAL:
 		System.out.println("El mejor valor de la generacion " + nGen  + " es: " + mejor + " y la media es de: " + (total / tamPoblacion));
 		
 		// Ahora debemos seleccionar a los individuos
@@ -224,9 +258,20 @@ public class AlgoritmoGenetico {
 			}
 	    });
 		
+		// PROVISIONAL:
+//		System.out.println("Los individuos de la generación " + nGen + " despues de seleccionar, cruzar y mutar ordenados por fitness son: ");
+//		for (int i = 0; i < posF.size(); i++)
+//			System.out.println("Individuo " + selecOrden.get(i).getPos() + " y con fitness " + selecOrden.get(i).getFitness());
+//		
 		// Sustituimos a los mejores por los seleccionados peores
-		for (int i = 0; i < numElite; i++)
+		for (int i = 0; i < numElite; i++) {
 			seleccionados[selecOrden.get(i).getPos()] = elite[i];
+		}
+			
+		// PROVISIONAL:
+//		System.out.println("Los individuos " + nGen + " despues de sustituir la plebe por la elite: ");
+//		for (int i = 0; i < selecOrden.size(); i++)
+//			System.out.println("Individuo " + i + " con fitness: " + seleccionados[i].evaluar());
 		
 		// Ahora tenemos la nueva poblacion en seleccionados
 		poblacion = seleccionados;

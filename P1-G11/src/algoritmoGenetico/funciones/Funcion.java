@@ -1,8 +1,6 @@
 package algoritmoGenetico.funciones;
 import java.lang.Math;
 
-import algoritmoGenetico.individuos.Individuo;
-
 public abstract class Funcion {
 	private int nVar; // El número de variables que recibe la funcion
 	private int lTotal; // La longitud total en bits de todas las variables
