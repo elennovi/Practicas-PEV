@@ -11,7 +11,7 @@ public class Truncamiento extends Seleccion {
 	// El umbral de truncamiento
 	private static final int trunc = 50;
 	
-	public Individuo[] seleccionar(int seleccionados, double elitismo, Individuo[] poblacion, boolean maxim) {
+	public Individuo[] seleccionar(int seleccionados, double pSelec, Individuo[] poblacion, boolean maxim) {
 		List<Par> posFit = new ArrayList<Par>();
 		// Evaluamos a los individuos y los almacenamos dentro de un array con el indice que ocupan en la poblacion
 		for (int i = 1; i < poblacion.length; i++) {

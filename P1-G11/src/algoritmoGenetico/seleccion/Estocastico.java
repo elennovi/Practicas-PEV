@@ -7,7 +7,7 @@ import algoritmoGenetico.individuos.Individuo;
 public class Estocastico extends Seleccion {
 
 	@Override
-	public Individuo[] seleccionar(int seleccionados, double elitismo, Individuo[] poblacion, boolean maxim) {
+	public Individuo[] seleccionar(int seleccionados, double pSelec, Individuo[] poblacion, boolean maxim) {
 		// Creamos una lista de individuos que vamos a devolver (teniendo en cuenta que tenemos que generar
 		// tantos individuos como se indique en el valor seleccionados)
 		Individuo[] ind = new Individuo[seleccionados];
