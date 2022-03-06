@@ -134,9 +134,8 @@ public class AlgoritmoGenetico {
 		
 		// Ordenamos el vector en funcion del fitness
 		posF.sort(new Comparator<Par>() {
-
 			public int compare(Par o1, Par o2) {
-				if (o1.greaterThan(o2))
+				if ((o1.greaterThan(o2) && f.maximiza()) || (!o1.greaterThan(o2) && !f.maximiza()))
 					return -1;
 				else if (o1.equals(o2))
 					return 0;
@@ -156,10 +155,7 @@ public class AlgoritmoGenetico {
 		
 		// Nos quedamos con tantos individuos como el porcentaje elite nos indique
 		for (int i = 0; i < numElite; i++) {
-			IndividuoBool nuevo = new IndividuoBool(f);
-			for(int j = 0; j < f.getLTotal(); j++)
-				nuevo.setAt(j, ((IndividuoBool) poblacion[posF.get(i).getPos()]).getAt(j));
-			elite[i] = nuevo;
+			elite[i] = poblacion[posF.get(i).getPos()].copia();
 		}
 		
 		//PROVISIONAL:
@@ -247,9 +243,8 @@ public class AlgoritmoGenetico {
 		// Los ordenamos de menor a mayor
 		// Ordenamos el vector en funcion del fitness
 		selecOrden.sort(new Comparator<Par>() {
-
 			public int compare(Par o1, Par o2) {
-				if (o1.greaterThan(o2))
+				if ((o1.greaterThan(o2) && f.maximiza()) || (!o1.greaterThan(o2) && !f.maximiza()))
 					return 1;
 				else if (o1.equals(o2))
 					return 0;

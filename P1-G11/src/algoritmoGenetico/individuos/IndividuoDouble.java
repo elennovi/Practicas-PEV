@@ -20,13 +20,18 @@ public class IndividuoDouble extends Individuo{
 	}
 	
 	public double evaluar() {
-		// TODO Auto-generated method stub
-		return 0;
+		return super.getF().evaluar(genesR);
 	}
 	
 	
 	public void initGenesAleatorio() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Individuo copia() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

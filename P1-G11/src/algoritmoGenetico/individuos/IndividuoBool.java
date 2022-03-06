@@ -60,4 +60,12 @@ public class IndividuoBool extends Individuo {
 		// valores reales y ese es su fitness
 		return f.evaluar(valuesR);
 	}
+
+	
+	public Individuo copia() {
+		IndividuoBool nuevo = new IndividuoBool(super.getF());
+		for (int i = 0; i < genesB.length; i++)
+			nuevo.setAt(i, genesB[i]);
+		return nuevo;
+	}
 }

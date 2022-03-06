@@ -11,8 +11,11 @@ import org.math.plot.*;
 import algoritmoGenetico.AlgoritmoGenetico;
 import algoritmoGenetico.cruce.CruceMonopunto;
 import algoritmoGenetico.funciones.Funcion1;
+import algoritmoGenetico.funciones.Funcion2;
 import algoritmoGenetico.mutar.Mutacion;
+import algoritmoGenetico.seleccion.Estocastico;
 import algoritmoGenetico.seleccion.Ruleta;
+import algoritmoGenetico.seleccion.Truncamiento;
 
 public class Ventana extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -23,7 +26,7 @@ public class Ventana extends JFrame {
 	
 	public Ventana(){
 		super("Algoritmo genetico");
-		this.AG = new AlgoritmoGenetico(100, 100, new Ruleta(), new CruceMonopunto(), new Mutacion(0.5), 0.7, 3, new Funcion1(0.001), this);
+		this.AG = new AlgoritmoGenetico(100, 100, new Truncamiento(), new CruceMonopunto(), new Mutacion(0.05), 0.7, 3, new Funcion1(0.001), this);
 		initGUI();
 	}
 
@@ -46,8 +49,8 @@ public class Ventana extends JFrame {
 					for(int i = 0; i < generaciones.length; i++)
 						generaciones[i] = i+1;
 					plot.addLegend("SOUTH");
-					plot.addLinePlot("media", Color.magenta, generaciones, medias);
-					plot.addLinePlot("mejor", Color.cyan, generaciones, mejores);
+					plot.addLinePlot("media", Color.green, generaciones, medias);
+					plot.addLinePlot("mejor", Color.red, generaciones, mejores);
 				}
 		});
 	}

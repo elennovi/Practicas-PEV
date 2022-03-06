@@ -15,6 +15,9 @@ public abstract class Individuo {
 	// La funcion que inicializa aleatoriamente todos los genes del individuo
 	public abstract void initGenesAleatorio();
 	
+	// La función que devuelve la copia del individuo
+	public abstract Individuo copia();
+	
 	public int getL() {
 		return f.getLTotal();
 	}
@@ -22,5 +25,7 @@ public abstract class Individuo {
 	public Funcion getF() {
 		return f;
 	}
+	
+	
 }
 
