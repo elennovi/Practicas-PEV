@@ -1,5 +1,7 @@
 package algoritmoGenetico.individuos;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import algoritmoGenetico.funciones.Funcion;
 
 public class IndividuoDouble extends Individuo{
@@ -7,7 +9,7 @@ public class IndividuoDouble extends Individuo{
 	
 	public IndividuoDouble(Funcion f){
 		super(f);
-		genesR = new double[f.getLTotal()];
+		genesR = new double[f.getnVar()];
 	}
 	
 	// Getters y setters para los valores de los genes
@@ -19,19 +21,37 @@ public class IndividuoDouble extends Individuo{
 		return genesR[i];
 	}
 	
+	public double[] getGenesReales() {
+		return genesR;
+	}
+	
+	public void setGenesReales(double[] genesR) {
+		this.genesR = genesR;
+	}
+	
 	public double evaluar() {
 		return super.getF().evaluar(genesR);
 	}
 	
 	
 	public void initGenesAleatorio() {
-		// TODO Auto-generated method stub
-		
+		Funcion f = super.getF();
+		for (int i = 0; i < genesR.length; i++) {
+			double random = ThreadLocalRandom.current().nextDouble(f.getMinimoAt(i), f.getMaximoAt(i));
+			genesR[i] = random;
+		}
 	}
 
 	@Override
 	public Individuo copia() {
-		// TODO Auto-generated method stub
-		return null;
+		IndividuoDouble nuevo = new IndividuoDouble(super.getF());
+		for (int i = 0; i < genesR.length; i++)
+			nuevo.setAt(i, genesR[i]);
+		return nuevo;
+	}
+
+	@Override
+	public double evaluaFunc() {
+		return super.getF().evaluar(genesR);
 	}
 }

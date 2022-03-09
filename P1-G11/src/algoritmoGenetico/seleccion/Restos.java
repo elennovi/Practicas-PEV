@@ -5,7 +5,7 @@ import algoritmoGenetico.individuos.Individuo;
 public class Restos extends Seleccion{
 
 	@Override
-	public Individuo[] seleccionar(int seleccionados, double pSelec, Individuo[] poblacion, boolean maxim) {
+	public Individuo[] seleccionar(int seleccionados, Individuo[] poblacion, boolean maxim) {
 		
 		// Lista de individuos
 		Individuo[] ind = new Individuo[seleccionados];
@@ -52,7 +52,7 @@ public class Restos extends Seleccion{
 		//Llamamos a otro metodo de seleccion (ruleta)
 
 		Seleccion ruleta = new Ruleta();
-		Individuo[] aux = ruleta.seleccionar(seleccionados - cont, pSelec, poblacion, maxim);
+		Individuo[] aux = ruleta.seleccionar(seleccionados - cont, poblacion, maxim);
 		
 		//Copiamos esta subseleccion en la lista de seleccionados
 		for(Individuo in : aux) {

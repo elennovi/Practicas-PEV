@@ -7,7 +7,7 @@ import algoritmoGenetico.individuos.Individuo;
 public class TorneoDeterministico extends Seleccion{
 
 	@Override
-	public Individuo[] seleccionar(int seleccionados, double pSelec, Individuo[] poblacion, boolean maxim) {
+	public Individuo[] seleccionar(int seleccionados, Individuo[] poblacion, boolean maxim) {
 		//Lista de individuos seleccionados
 		Individuo[] ind = new Individuo[seleccionados];
 

@@ -25,6 +25,8 @@ public abstract class Individuo {
 	public Funcion getF() {
 		return f;
 	}
+
+	public abstract double evaluaFunc();
 	
 	
 }

@@ -10,6 +10,7 @@ import visualizacion.Ventana;
 import algoritmoGenetico.funciones.*;
 import algoritmoGenetico.individuos.Individuo;
 import algoritmoGenetico.individuos.IndividuoBool;
+import algoritmoGenetico.individuos.IndividuoDouble;
 
 public class AlgoritmoGenetico {
 	private Seleccion fSelec;
@@ -26,20 +27,12 @@ public class AlgoritmoGenetico {
 	private double[] generaciones;
 	private double[] mejores;
 	private double[] medias;
-	
-	
-	// Falta añadir los atributos de cada funcion algoritmo genetico
-	
-  /*
-   * 1. Evaluacion ?
-   * 2. Seleccion
-   * 3. Cruce
-   * 4. Mutacion
-
-   * */
+	private double[] mejoresAbs;
+	private double mejorAbsoluto;
+	private boolean indBool;
 	
 	public AlgoritmoGenetico(int tamPoblacion, int numGen, Seleccion fSelec, Cruce fCruce, Mutacion fMutacion, 
-			double pCruce, double elitismo, Funcion f, Ventana window) {
+			double pCruce, double elitismo, Funcion f, Ventana window, boolean indBool) {
 		this.tamPoblacion = tamPoblacion;
 		this.numGen = numGen;
 		this.fSelec = fSelec;
@@ -48,19 +41,22 @@ public class AlgoritmoGenetico {
 		this.pCruce = pCruce;
 		this.elitismo = elitismo;
 		// Calculamos el número de individuos que van a formar parte de la élite
-		numElite = (int) (this.tamPoblacion * (this.elitismo / 100));
+		numElite = (int) (this.tamPoblacion * this.elitismo);
 		generaciones = new double[this.numGen];
 		mejores = new double[this.numGen];
-		medias = new double[this.numGen];		
+		medias = new double[this.numGen];
+		mejoresAbs = new double[this.numGen];
 		// Falta el array que calcula el mejor absoluto
 		for (int i = 0; i < this.numGen; i++) {
 			generaciones[i] = (i + 1);
 			mejores[i] = 0;
 			medias[i] = 0;
+			mejoresAbs[i] = 0;
 		}
 		this.f = f;
 		this.poblacion = new Individuo[tamPoblacion];
 		this.window = window;
+		this.indBool = indBool;
 	}
 	
 	public void run() {
@@ -68,31 +64,28 @@ public class AlgoritmoGenetico {
 		generaPoblacionInicial();
 		
 		// Ahora ejecutamos el algoritmo genetico tantas veces como numGeneraciones se pidan
-		for (int i = 0; i < numGen; i++)
-			ejecutaAlgoritmoGenetico(i);
-		
-//		boolean[] var1 = new boolean[f.getLAt(0)];
-//		for (int i = 0; i < f.getLAt(0); i++) 
-//			var1[i] = true && (i % 2 == 0);
-//		boolean[] var2 = new boolean[f.getLAt(1)];
-//		for (int i = 0; i < f.getLAt(1); i++) 
-//			var2[i] = true && (i % 2 != 0);
-//		boolean[][] arrB = new boolean[f.getnVar()][];
-//		arrB[0] = var1;
-//		arrB[1] = var2;
-//		
-//		double[] varsR = f.valorRealVariables(arrB);
-//		for (int i = 0; i < f.getnVar(); i++)
-//			System.out.println("Variable " + (i + 1) + ": " + varsR[i]);
-//		
-//		System.out.println("El fitness es: " + f.evaluar(varsR));	
+		new Thread(new Runnable() {
+            @Override 
+            public void run() 
+            {
+
+            	for (int i = 0; i < numGen; i++) {
+                    ejecutaAlgoritmoGenetico(i);
+                }
+
+            }   
+        }).start();
 	}
 	
 	public void generaPoblacionInicial() {
 		// Generamos una poblacion inicial
 		for (int i = 0; i < tamPoblacion; i++) {
-			// Generamos un individuo booleano
-			Individuo ind = new IndividuoBool(f);
+			Individuo ind;
+			// Generamos un individuo del tipo que corresponda
+			if (indBool)
+				ind = new IndividuoBool(f);
+			else
+				ind = new IndividuoDouble(f);
 			// LLamamos a la función que lo genera aleatoriamente
 			ind.initGenesAleatorio();
 			poblacion[i] = ind;
@@ -132,40 +125,47 @@ public class AlgoritmoGenetico {
 				mejor = evaluacion;
 		}
 		
+		// Comprobamos si ha cambiado el mejor absoluto
+		if (nGen == 0)
+			mejorAbsoluto = mejor;
+		else if ((mejorAbsoluto < mejor && f.maximiza()) || (mejorAbsoluto > mejor && !f.maximiza()))
+			mejorAbsoluto = mejor;
+		
 		// Ordenamos el vector en funcion del fitness
 		posF.sort(new Comparator<Par>() {
 			public int compare(Par o1, Par o2) {
-				if ((o1.greaterThan(o2) && f.maximiza()) || (!o1.greaterThan(o2) && !f.maximiza()))
-					return -1;
-				else if (o1.equals(o2))
-					return 0;
-				else 
-					return 1;
+				if (f.maximiza()) {
+					if (o1.greaterThan(o2))
+						return -1;
+					else if (o1.equals(o2))
+						return 0;
+					else 
+						return 1;
+				}
+				else {
+					if (o1.greaterThan(o2))
+						return 1;
+					else if (o1.equals(o2))
+						return 0;
+					else 
+						return -1;
+				}
+				
 			}
 	    });
 		
-		// PROVISIONAL:
-//		System.out.println("Los individuos de la generación " + nGen + " ordenados por fitness son: ");
-//		for (int i = 0; i < posF.size(); i++)
-//			System.out.println("Individuo " + posF.get(i).getPos() + " y con fitness " + posF.get(i).getFitness());
-		
 		// Creamos un array aque contenga a los individos de la élite (los mejores, aquellos que no queremos
 		// perder)
-		Individuo[] elite = new IndividuoBool[numElite];
+		Individuo[] elite = new Individuo[numElite];
 		
 		// Nos quedamos con tantos individuos como el porcentaje elite nos indique
-		for (int i = 0; i < numElite; i++) {
+		for (int i = 0; i < numElite; i++)
 			elite[i] = poblacion[posF.get(i).getPos()].copia();
-		}
-		
-		//PROVISIONAL:
-//		System.out.println("La élite escogida para la generacion" + nGen + ":");
-//		for (int i = 0; i < numElite; i++)
-//			System.out.println("Individuo con fitness: " + elite[i].evaluar());
 		
 		// Indicamos a la ventana que se han evaluado la nueva poblacion
 		mejores[nGen] = mejor;
 		medias[nGen] = (total / tamPoblacion);
+		mejoresAbs[nGen] = mejorAbsoluto;
 		
 		// Esperamos unos segundos para retrasar la ejecución
 		try {
@@ -175,33 +175,28 @@ public class AlgoritmoGenetico {
 		}
 		
 		// Le decimos a la ventana que se actualice
-		window.actualizar(mejores, medias);
+		window.actualizar(mejores, medias, mejoresAbs);
 		
 		// Mostramos el valor de la poblacion actual
-		// PROVISIONAL:
 		System.out.println("El mejor valor de la generacion " + nGen  + " es: " + mejor + " y la media es de: " + (total / tamPoblacion));
 		
 		// Ahora debemos seleccionar a los individuos
-		Individuo[] seleccionados = fSelec.seleccionar(tamPoblacion, elitismo, poblacion, f.maximiza());
+		Individuo[] seleccionados = fSelec.seleccionar(tamPoblacion, poblacion, f.maximiza());
 		
-		// PROVISIONAL:
-		// Mostramos todos los individuos con su genotipo y su fenotipo
-//		for (int i = 0; i < tamPoblacion; i++)
-//			System.out.println("Individuo " + (i + 1) + " con genotipo: " + toString((IndividuoBool) seleccionados[i]) + " y  fitness: " + seleccionados[i].evaluar());
-//		
 		
 		// Recorremos los seleccionados y guardamos en un array los que hayan pasado
 		// la probabilidad de cruce
-		IndividuoBool[] cruzan = new IndividuoBool[tamPoblacion];
+		Individuo[] cruzan = new Individuo[tamPoblacion];
 		// Almacena las posiciones de los individuos que seleccionamos
 		int[] posiciones = new int[tamPoblacion];
 
 		int numCruzan = 0;
+		
 		for (int i = 0; i < tamPoblacion; i++) {
 			double cruza = Math.random();
 			// Si debe cruzarse
 			if (cruza < pCruce) {
-				cruzan[numCruzan] = (IndividuoBool) seleccionados[i];
+				cruzan[numCruzan] = seleccionados[i];
 				posiciones[numCruzan] = i;
 				numCruzan++;
 			}
@@ -213,10 +208,7 @@ public class AlgoritmoGenetico {
 		
 		// Recorremos a los que se van a cruzar de dos en dos y aplicamos la funcion de cruce
 		for (int i = 0; i < numCruzan; i += 2) {
-			IndividuoBool[] hijos = fCruce.cruzar(cruzan[i], cruzan[i + 1]);
-			// PROVISIONAL:
-//			System.out.println(toString((IndividuoBool)cruzan[i]) + " + " + toString((IndividuoBool)cruzan[i + 1]) 
-//			+ " = " + toString((IndividuoBool)hijos[0]) + " , " + toString((IndividuoBool)hijos[1]));
+			Individuo[] hijos = fCruce.cruzar(cruzan[i], cruzan[i + 1]);
 			// Nos quedamos con los hijos siempre independientemente de si son peores
 			// que sus padres 
 			seleccionados[posiciones[i]] = hijos[0];
@@ -226,9 +218,7 @@ public class AlgoritmoGenetico {
 		// Mutamos sobre el array de seleccionados en funcion de la probabilidad de mutacion
 		for (int i = 0; i < tamPoblacion;i++) {
 			// Si debe mutar
-//			System.out.println("A: " + toString((IndividuoBool) seleccionados[i]));
-			fMutacion.mutar((IndividuoBool) seleccionados[i]);
-//			System.out.println("D: " + toString((IndividuoBool) seleccionados[i]));
+			fMutacion.mutar(seleccionados[i]);
 		}
 		
 		// Creamos un array de pares para ordenarlos de menos a mayor
@@ -244,29 +234,30 @@ public class AlgoritmoGenetico {
 		// Ordenamos el vector en funcion del fitness
 		selecOrden.sort(new Comparator<Par>() {
 			public int compare(Par o1, Par o2) {
-				if ((o1.greaterThan(o2) && f.maximiza()) || (!o1.greaterThan(o2) && !f.maximiza()))
-					return 1;
-				else if (o1.equals(o2))
-					return 0;
-				else 
-					return -1;
+				if (f.maximiza()) {
+					if (o1.greaterThan(o2))
+						return 1;
+					else if (o1.equals(o2))
+						return 0;
+					else 
+						return -1;
+				}
+				else {
+					if (o1.greaterThan(o2))
+						return -1;
+					else if (o1.equals(o2))
+						return 0;
+					else 
+						return 1;
+				}
+				
 			}
 	    });
-		
-		// PROVISIONAL:
-//		System.out.println("Los individuos de la generación " + nGen + " despues de seleccionar, cruzar y mutar ordenados por fitness son: ");
-//		for (int i = 0; i < posF.size(); i++)
-//			System.out.println("Individuo " + selecOrden.get(i).getPos() + " y con fitness " + selecOrden.get(i).getFitness());
-//		
+						
 		// Sustituimos a los mejores por los seleccionados peores
 		for (int i = 0; i < numElite; i++) {
 			seleccionados[selecOrden.get(i).getPos()] = elite[i];
 		}
-			
-		// PROVISIONAL:
-//		System.out.println("Los individuos " + nGen + " despues de sustituir la plebe por la elite: ");
-//		for (int i = 0; i < selecOrden.size(); i++)
-//			System.out.println("Individuo " + i + " con fitness: " + seleccionados[i].evaluar());
 		
 		// Ahora tenemos la nueva poblacion en seleccionados
 		poblacion = seleccionados;

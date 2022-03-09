@@ -32,6 +32,34 @@ public class IndividuoBool extends Individuo {
 	}
 	
 	public double evaluar() {
+		return this.evaluaFunc();
+	}
+	
+	public double evaluaFunc() {
+		// Conseguimos el fenotipo
+		double[] valuesR = getFenotipo();
+		
+		Funcion f = super.getF();
+		
+		// Si alguno de ellos es superior al maximo es el propio maximo de la variable
+		for (int i = 0; i < f.getnVar(); i++) {
+			double v = valuesR[i];
+			// Si es mas grande que el maximo suponemos que es el maximo
+			if (v > f.getMaximoAt(i))
+				valuesR[i] = f.getMaximoAt(i);
+		}
+		return f.evaluar(valuesR);
+	}
+
+	
+	public Individuo copia() {
+		IndividuoBool nuevo = new IndividuoBool(super.getF());
+		for (int i = 0; i < genesB.length; i++)
+			nuevo.setAt(i, genesB[i]);
+		return nuevo;
+	}
+	
+	public double[] getFenotipo() {
 		Funcion f = super.getF();
 		// Conseguimos arrays de booleanos que se corresponden con los valores en binario
 		// de cada variable
@@ -46,26 +74,6 @@ public class IndividuoBool extends Individuo {
 		}
 		
 		// Ahora conseguimos los valores en valor real
-		double[] valuesR = f.valorRealVariables(valuesB);
-		
-		// Si alguno de ellos es superior al maximo es el propio maximo de la variable
-		for (int i = 0; i < f.getnVar(); i++) {
-			double v = valuesR[i];
-			// Si es mas grande que el maximo suponemos que es el maximo
-			if (v > f.getMaximoAt(i))
-				valuesR[i] = f.getMaximoAt(i);
-		}
-		
-		// A continuacion evaluamos con la funcion que queremos maximizar/minimizar con los
-		// valores reales y ese es su fitness
-		return f.evaluar(valuesR);
-	}
-
-	
-	public Individuo copia() {
-		IndividuoBool nuevo = new IndividuoBool(super.getF());
-		for (int i = 0; i < genesB.length; i++)
-			nuevo.setAt(i, genesB[i]);
-		return nuevo;
+		return f.valorRealVariables(valuesB);
 	}
 }

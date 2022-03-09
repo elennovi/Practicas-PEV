@@ -7,7 +7,7 @@ import algoritmoGenetico.individuos.Individuo;
 public class Estocastico extends Seleccion {
 
 	@Override
-	public Individuo[] seleccionar(int seleccionados, double pSelec, Individuo[] poblacion, boolean maxim) {
+	public Individuo[] seleccionar(int seleccionados, Individuo[] poblacion, boolean maxim) {
 		// Creamos una lista de individuos que vamos a devolver (teniendo en cuenta que tenemos que generar
 		// tantos individuos como se indique en el valor seleccionados)
 		Individuo[] ind = new Individuo[seleccionados];
@@ -30,13 +30,10 @@ public class Estocastico extends Seleccion {
 		double[] proporciones = new double[poblacion.length];
 		cont = 0;
 		for (double i: evaluaciones) {
-			// Si es maximizar entonces el mejor fitness es el mas grande
-			if (maxim)
-				proporciones[cont] = i/total;
-			// Si es minimizar entonces el mejor fitness es el mas bajo
-			// por lo que ponemos las proporciones al reves
-			else 
-				proporciones[cont] = 1 - i/total;
+			if (!maxim && total > 0)
+				total = -total;
+			// El mejor fitness es el mas grande
+			proporciones[cont] = i/total;
 			cont++;
 		}
 		

@@ -88,6 +88,13 @@ public abstract class Funcion {
 		return valuesR;
 	}
 	
+	public boolean[][] valorBoolVariables(double[] valuesR){
+		boolean[][] valuesB = new boolean[nVar][];
+		for (int i = 0; i < nVar; i++)
+			valuesB[i] = dec2bin((int) (((valuesR[i] - minimos[i]) * (Math.pow(2, l[i]) - 1) / (maximos[i] - minimos[i]))), l[i]);
+		return valuesB;
+	}
+	
 	private int bin2dec(boolean[] bin) {
 		String s = "";
 		for (boolean b: bin) {
@@ -95,5 +102,21 @@ public abstract class Funcion {
 			else s+= "0";
 		}
 		return Integer.parseInt(s,2);
+	}
+	
+	private boolean[] dec2bin(int dec, int longit) {
+		String binS = Integer.toBinaryString(dec);
+		boolean[] b = new boolean[longit];
+		// Calculamos los que serán 0's
+		int ultCero = longit - binS.length();
+		for (int i = 0; i < ultCero; i++)
+			b[i] = false;
+		for (int i = ultCero; i < binS.length(); i++) {
+			if (binS.charAt(i) == '1')
+				b[i] = true;
+			else 
+				b[i] = false;
+		}
+		return b;
 	}
 }
