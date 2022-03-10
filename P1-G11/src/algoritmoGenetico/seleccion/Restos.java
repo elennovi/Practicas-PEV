@@ -7,34 +7,46 @@ public class Restos extends Seleccion{
 	@Override
 	public Individuo[] seleccionar(int seleccionados, Individuo[] poblacion, boolean maxim) {
 		
-		// Lista de individuos
+		// Creamos una lista de individuos que vamos a devolver (teniendo en cuenta que tenemos que generar
+		// tantos individuos como se indique en el valor seleccionados)
 		Individuo[] ind = new Individuo[seleccionados];
 		
 		// Ahora tenemos que evaluar todos los individuos mientras nos quedamos
 		// con el fitness total conseguido
 		double[] evaluaciones = new double[poblacion.length];
 		int cont = 0;
-		double total = 0;
-		for (Individuo i: poblacion) {
+		double max = poblacion[0].evaluar();
+		double min = max;
+		for (int i = 1; i < poblacion.length; i++) {
+			double ev = poblacion[i].evaluar();
 			// Evaluamos al individuo
-			evaluaciones[cont] = i.evaluar();
-			// Lo acumulamos al total
-			total += evaluaciones[cont];
-			cont++;
+			evaluaciones[cont] = ev;
+			cont++;		
+			// Comprobamos si es el nuevo maximo
+			if (max < ev)
+				max = ev;
+			if (min > ev)
+				min = ev;
 		}
+		
+		// Desplazamiento de la aptitud utilizando el valor maximo
+		double total = 0;
+		for (int i = 0; i < poblacion.length; i++) {
+			if (!maxim)
+				evaluaciones[i] = max * 1.05 - evaluaciones[i];
+			else 
+				evaluaciones[i] = evaluaciones[i] + Math.abs(min);
+			total += evaluaciones[i];
+		}
+		
 		
 		// Ahora calculamos la proporcion (como de bueno es en comparacion
 		// con los demas).
 		double[] proporciones = new double[poblacion.length];
 		cont = 0;
 		for (double i: evaluaciones) {
-			// Si es maximizar entonces el mejor fitness es el mas grande
-			if (maxim)
-				proporciones[cont] = i/total;
-			// Si es minimizar entonces el mejor fitness es el mas bajo
-			// por lo que ponemos las proporciones al reves
-			else 
-				proporciones[cont] = 1 - i/total;
+			// El mejor fitness es el mas grande si estabamos minimizando
+			proporciones[cont] = i / total;
 			cont++;
 		}
 		
@@ -50,7 +62,6 @@ public class Restos extends Seleccion{
 		}
 		
 		//Llamamos a otro metodo de seleccion (ruleta)
-
 		Seleccion ruleta = new Ruleta();
 		Individuo[] aux = ruleta.seleccionar(seleccionados - cont, poblacion, maxim);
 		

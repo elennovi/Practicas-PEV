@@ -16,24 +16,38 @@ public class Estocastico extends Seleccion {
 		// con el fitness total conseguido
 		double[] evaluaciones = new double[poblacion.length];
 		int cont = 0;
-		double total = 0;
-		for (Individuo i: poblacion) {
+		double max = poblacion[0].evaluar();
+		double min = max;
+		for (int i = 1; i < poblacion.length; i++) {
+			double ev = poblacion[i].evaluar();
 			// Evaluamos al individuo
-			evaluaciones[cont] = i.evaluar();
-			// Lo acumulamos al total
-			total += evaluaciones[cont];
-			cont++;
+			evaluaciones[cont] = ev;
+			cont++;		
+			// Comprobamos si es el nuevo maximo
+			if (max < ev)
+				max = ev;
+			if (min > ev)
+				min = ev;
 		}
+		
+		// Desplazamiento de la aptitud utilizando el valor maximo
+		double total = 0;
+		for (int i = 0; i < poblacion.length; i++) {
+			if (!maxim)
+				evaluaciones[i] = max * 1.05 - evaluaciones[i];
+			else 
+				evaluaciones[i] = evaluaciones[i] + Math.abs(min);
+			total += evaluaciones[i];
+		}
+		
 		
 		// Ahora calculamos la proporcion (como de bueno es en comparacion
 		// con los demas).
 		double[] proporciones = new double[poblacion.length];
 		cont = 0;
 		for (double i: evaluaciones) {
-			if (!maxim && total > 0)
-				total = -total;
-			// El mejor fitness es el mas grande
-			proporciones[cont] = i/total;
+			// El mejor fitness es el mas grande si estabamos minimizando
+			proporciones[cont] = i / total;
 			cont++;
 		}
 		
