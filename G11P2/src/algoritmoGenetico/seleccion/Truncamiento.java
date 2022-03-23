@@ -11,12 +11,12 @@ public class Truncamiento extends Seleccion {
 	// El umbral de truncamiento
 	private static final int trunc = 50;
 	
-	public Individuo[] seleccionar(int seleccionados, Individuo[] poblacion, boolean maxim) {
+	public Individuo[] seleccionar(int seleccionados, Individuo[] poblacion) {
 		List<Par> posFit = new ArrayList<Par>();
 		// Evaluamos a los individuos y los almacenamos dentro de un array con el indice que ocupan en la poblacion
 		for (int i = 1; i < poblacion.length; i++) {
 			// Nos ayudará a calcular la media de la poblacion actual
-			double evaluacion = poblacion[i].evaluar();
+			double evaluacion = poblacion[i].getFitness();
 			// Guardamos la posicion que ocupa en la poblacion junto con su fitness para ordenarlo posteriormente
 			posFit.add(new Par(i, evaluacion));
 		}
@@ -24,22 +24,12 @@ public class Truncamiento extends Seleccion {
 		// Ordenamos el vector en funcion del fitness
 		posFit.sort(new Comparator<Par>() {
 			public int compare(Par o1, Par o2) {
-				if (maxim) {
-					if (o1.greaterThan(o2))
-						return -1;
-					else if (o1.equals(o2))
-						return 0;
-					else 
-						return 1;
-				}
-				else {
-					if (o1.greaterThan(o2))
-						return 1;
-					else if (o1.equals(o2))
-						return 0;
-					else 
-						return -1;
-				}
+				if (o1.greaterThan(o2))
+					return 1;
+				else if (o1.equals(o2))
+					return 0;
+				else 
+					return -1;
 				
 			}
 	    });

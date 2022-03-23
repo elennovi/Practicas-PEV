@@ -13,9 +13,12 @@ public class IndividuoInt extends Individuo {
 		valuesI = new int[c.getNVuelos()];
 	}
 
-	public double evaluar() {
+	public void evaluar() {
+		double fit = 0;
 		// TODO Auto-generated method stub
-		return 0;
+		
+		// Actualizamos 
+		fitness = fit;
 	}
 	
 	public void initGenesAleatorio() {

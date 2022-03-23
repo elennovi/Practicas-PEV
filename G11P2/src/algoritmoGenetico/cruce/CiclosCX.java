@@ -33,8 +33,8 @@ public class CiclosCX extends Cruce {
 		
 		// Un array de booleanos que indica que el número en cada posición ya ha aparecido en el nuevo individuo
 		boolean[] haAparecido = new boolean[ind.getL()];
-		for (boolean b: haAparecido)
-			b = false;
+		for (int i = 0; i < ind.getL(); i++)
+			haAparecido[i] = false;
 		
 		// Hacemos el ciclo
 		int pos = 0;

@@ -7,7 +7,7 @@ import algoritmoGenetico.individuos.Individuo;
 public class TorneoDeterministico extends Seleccion{
 
 	@Override
-	public Individuo[] seleccionar(int seleccionados, Individuo[] poblacion, boolean maxim) {
+	public Individuo[] seleccionar(int seleccionados, Individuo[] poblacion) {
 		//Lista de individuos seleccionados
 		Individuo[] ind = new Individuo[seleccionados];
 
@@ -16,21 +16,21 @@ public class TorneoDeterministico extends Seleccion{
 			Random r = new Random();
 			//Se realiza una seleccion entre 3 individuos aleatorios
 			ind[i] = torneo3(poblacion[r.nextInt(poblacion.length)], poblacion[r.nextInt(poblacion.length)], 
-					poblacion[r.nextInt(poblacion.length)], maxim);
+					poblacion[r.nextInt(poblacion.length)]);
 		}
 		return ind;
 	}
 	
 	
 	//Torneo de 3 individuos
-	private Individuo torneo3(Individuo uno, Individuo dos, Individuo tres, boolean maxim) {
-		double ev1 = uno.evaluar(), ev2 = dos.evaluar(), ev3 = tres.evaluar();
+	private Individuo torneo3(Individuo uno, Individuo dos, Individuo tres) {
+		double ev1 = uno.getFitness(), ev2 = dos.getFitness(), ev3 = tres.getFitness();
 
 		//Nos quedamos siempre con el mejor
 		//El mejor depende de si se quiere maximizar o minimizar
-		if((ev1 > ev2 && ev1 > ev3 && maxim) || (ev1 < ev2 && ev1 < ev3 && !maxim))
+		if(ev1 < ev2 && ev1 < ev3 )
 			return uno;
-		else if((ev2 > ev1 && ev2 > ev3 && maxim) || (ev2 < ev1 && ev2 < ev3 && !maxim))
+		else if(ev2 < ev1 && ev2 < ev3)
 			return dos;
 		return tres;
 	}

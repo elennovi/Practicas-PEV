@@ -3,47 +3,24 @@ import algoritmoGenetico.individuos.Individuo;
 
 public class Ruleta extends Seleccion{
 
-	public Individuo[] seleccionar(int seleccionados, Individuo[] poblacion, boolean maxim) {
+	public Individuo[] seleccionar(int seleccionados, Individuo[] poblacion) {
 		// Creamos una lista de individuos que vamos a devolver (teniendo en cuenta que tenemos que generar
 		// tantos individuos como se indique en el valor seleccionados)
 		Individuo[] ind = new Individuo[seleccionados];
 		
-		// Ahora tenemos que evaluar todos los individuos mientras nos quedamos
-		// con el fitness total conseguido
-		double[] evaluaciones = new double[poblacion.length];
-		int cont = 0;
-		double max = poblacion[0].evaluar();
-		double min = max;
-		for (int i = 1; i < poblacion.length; i++) {
-			double ev = poblacion[i].evaluar();
-			// Evaluamos al individuo
-			evaluaciones[cont] = ev;
-			cont++;		
-			// Comprobamos si es el nuevo maximo
-			if (max < ev)
-				max = ev;
-			if (min > ev)
-				min = ev;
-		}
-		
-		// Desplazamiento de la aptitud utilizando el valor maximo
+		// Calculamos el fitness total
 		double total = 0;
-		for (int i = 0; i < poblacion.length; i++) {
-			if (!maxim)
-				evaluaciones[i] = max * 1.05 - evaluaciones[i];
-			else 
-				evaluaciones[i] = evaluaciones[i] + Math.abs(min);
-			total += evaluaciones[i];
-		}
-		
+		for (Individuo i: poblacion)
+			total += i.getFitDesplazado();
+
 		
 		// Ahora calculamos la proporcion (como de bueno es en comparacion
 		// con los demas).
 		double[] proporciones = new double[poblacion.length];
-		cont = 0;
-		for (double i: evaluaciones) {
+		int cont = 0;
+		for (Individuo i: poblacion) {
 			// El mejor fitness es el mas grande si estabamos minimizando
-			proporciones[cont] = i / total;
+			proporciones[cont] = i.getFitDesplazado() / total;
 			cont++;
 		}
 		
