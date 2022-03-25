@@ -23,7 +23,7 @@ import org.math.plot.*;
 
 import algoritmoGenetico.AlgoritmoGenetico;
 import algoritmoGenetico.cruce.*;
-import algoritmoGenetico.funciones.*;
+import algoritmoGenetico.casos.*;
 import algoritmoGenetico.mutar.*;
 import algoritmoGenetico.seleccion.*;
 
@@ -33,19 +33,18 @@ public class Ventana extends JFrame {
 	private AlgoritmoGenetico AG;
 	private Plot2DPanel plot;
 	private JButton run;
-	private JLabel mut;
 	private JPanel mainPanel;
 	private JPanel seleccionPanel;
 	
-	private JTextArea textTam, textNGen, textCruce, textMutacion, textElitismo, textPrecision, textNF4;
-	private JComboBox<String> comboSelec, comboCruce, comboFun;
+	private JTextArea textTam, textNGen, textCruce, textMutacion, textElitismo;
+	private JComboBox<String> comboSelec, comboCruce, comboCaso, comboMut;
 	
-	private static final String TAM_POBLACION = "100", NUM_GENERACIONES = "100", NF4 = "4";
-	private static final String PORCENTAJE_CRUCE = "60", PORCENTAJE_MUTACION = "5", PRECISION = "0.001", PORCENTAJE_ELITISMO = "0";
-	private static final String[] metodSel =  {"Ruleta", "Torneo deterministico", "Torneo probabilistico", "Truncamiento", "Estocastico", "Restos"};
-	private static final String[] metodCruceBool =  {"Monopunto", "Discreto uniforme"};
-	private static final String[] metodCruceDouble = {"Monopunto", "Discreto uniforme", "Aritmetico", "BLX-alpha"};
-	private static final String[] fs =  {"Funcion 1", "Funcion 2", "Funcion 3", "Funcion 4 booleana", "Funcion 4 real"};
+	private static final String TAM_POBLACION = "100", NUM_GENERACIONES = "100";
+	private static final String PORCENTAJE_CRUCE = "60", PORCENTAJE_MUTACION = "5", PORCENTAJE_ELITISMO = "0";
+	private static final String[] metodSel =  {"Ruleta", "Torneo deterministico", "Torneo probabilistico", "Truncamiento", "Estocastico", "Restos", "Ranking"};
+	private static final String[] metodCruceInt =  {"CX", "PMX", "OX basico", "OX posiciones prioritarias", "OX orden prioritario", "CO"};
+	private static final String[] metodMut = {"Inversion", "Intercambio", "Heuristica", "Insercion"};
+	private static final String[] cs =  {"Caso 1", "Caso 2", "Caso 3"};
 	
 	public Ventana(){
 		super("Algoritmo genetico");
@@ -147,21 +146,6 @@ public class Ventana extends JFrame {
 		seleccionPanel.add(labelelit);
 		seleccionPanel.add(textElitismo);
 		
-		// Precision
-		JLabel labelprec = new JLabel("Precision numerica: ", SwingConstants.LEFT);
-		labelprec.setPreferredSize(new Dimension(250, 25));
-		labelprec.setMaximumSize(new Dimension(250, 25));
-		labelprec.setMinimumSize(new Dimension(250, 25));
-		labelprec.setAlignmentX( Component.LEFT_ALIGNMENT);
-		textPrecision = new JTextArea(PRECISION);
-		textPrecision.setPreferredSize(new Dimension(250, 25));
-		textPrecision.setMaximumSize(new Dimension(250, 25));
-		textPrecision.setMinimumSize(new Dimension(250, 25));
-		textPrecision.setAlignmentX( Component.LEFT_ALIGNMENT);
-		
-		seleccionPanel.add(labelprec);
-		seleccionPanel.add(textPrecision);
-		
 		// Combobox para el metodo de seleccion
 		JLabel labelfsel = new JLabel("Metodo de seleccion: ", SwingConstants.LEFT);
 		labelfsel.setPreferredSize(new Dimension(250, 25));
@@ -183,7 +167,7 @@ public class Ventana extends JFrame {
 		labelfcruce.setMaximumSize(new Dimension(250, 25));
 		labelfcruce.setMinimumSize(new Dimension(250, 25));
 		labelfcruce.setAlignmentX( Component.LEFT_ALIGNMENT);
-		comboCruce = new JComboBox<String>(metodCruceBool);
+		comboCruce = new JComboBox<String>(metodCruceInt);
 		comboCruce.setPreferredSize(new Dimension(250, 25));
 		comboCruce.setMaximumSize(new Dimension(250, 25));
 		comboCruce.setMinimumSize(new Dimension(250, 25));
@@ -193,77 +177,36 @@ public class Ventana extends JFrame {
 		seleccionPanel.add(comboCruce);
 		
 		// Combobox para la funcion:
-		JLabel labelf= new JLabel("Funcion que se pretende optimizar: ", SwingConstants.LEFT);
-		labelf.setPreferredSize(new Dimension(250, 25));
-		labelf.setMaximumSize(new Dimension(250, 25));
-		labelf.setMinimumSize(new Dimension(250, 25));
-		labelf.setAlignmentX(Component.LEFT_ALIGNMENT);
-		comboFun = new JComboBox<String>(fs);
-		comboFun.setPreferredSize(new Dimension(250, 25));
-		comboFun.setMaximumSize(new Dimension(250, 25));
-		comboFun.setMinimumSize(new Dimension(250, 25));
-		comboFun.setAlignmentX( Component.LEFT_ALIGNMENT);
-		
-		ActionListener funcAL = new ActionListener() {//add actionlistner to listen for change
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	if (comboFun.getSelectedIndex() == 4) {
-            		comboCruce.removeAllItems();
-            		for (int i = 0 ; i < metodCruceDouble.length; i++)
-            			comboCruce.addItem(metodCruceDouble[i]);
-            		mut.setText("Mutacion uniforme");
-            		textNF4.setEditable(true);
-            	}
-            	else {
-            		comboCruce.removeAllItems();
-            		for (int i = 0 ; i < metodCruceBool.length; i++)
-            			comboCruce.addItem(metodCruceBool[i]);
-            		mut.setText("Mutacion basica");
-            		textNF4.setEditable(false);
-            	}
-            	
-            	if (comboFun.getSelectedIndex() == 3)
-            		textNF4.setEditable(true);
-            }
-		};
-		
-		comboFun.addActionListener(funcAL);
+		JLabel labelc = new JLabel("Funcion que se pretende optimizar: ", SwingConstants.LEFT);
+		labelc.setPreferredSize(new Dimension(250, 25));
+		labelc.setMaximumSize(new Dimension(250, 25));
+		labelc.setMinimumSize(new Dimension(250, 25));
+		labelc.setAlignmentX(Component.LEFT_ALIGNMENT);
+		comboCaso = new JComboBox<String>(cs);
+		comboCaso.setPreferredSize(new Dimension(250, 25));
+		comboCaso.setMaximumSize(new Dimension(250, 25));
+		comboCaso.setMinimumSize(new Dimension(250, 25));
+		comboCaso.setAlignmentX( Component.LEFT_ALIGNMENT);
 
 		
-		seleccionPanel.add(labelf);
-		seleccionPanel.add(comboFun);
+		seleccionPanel.add(labelc);
+		seleccionPanel.add(comboCaso);
 		
-		// El texto para decidir el numero de variables de F4
-		JLabel labelnf4 = new JLabel("Numero de variables para la funcion 4: ", SwingConstants.LEFT);
-		labelnf4.setPreferredSize(new Dimension(250, 25));
-		labelnf4.setMaximumSize(new Dimension(250, 25));
-		labelnf4.setMinimumSize(new Dimension(250, 25));
-		labelnf4.setAlignmentX(Component.LEFT_ALIGNMENT);
-		textNF4 = new JTextArea(NF4);
-		textNF4.setPreferredSize(new Dimension(250, 25));
-		textNF4.setMaximumSize(new Dimension(250, 25));
-		textNF4.setMinimumSize(new Dimension(250, 25));
-		textNF4.setAlignmentX( Component.LEFT_ALIGNMENT);
-		textNF4.setEditable(false);
-		
-		seleccionPanel.add(labelnf4);
-		seleccionPanel.add(textNF4);
-		
-		// Añadimos una etiqueta
-		JLabel labelMut = new JLabel("La mutacion predeterminada es:", SwingConstants.LEFT);
+		// Combobox para la mutacion:
+		JLabel labelMut= new JLabel("Metodo de mutacion: ", SwingConstants.LEFT);
 		labelMut.setPreferredSize(new Dimension(250, 25));
 		labelMut.setMaximumSize(new Dimension(250, 25));
 		labelMut.setMinimumSize(new Dimension(250, 25));
 		labelMut.setAlignmentX(Component.LEFT_ALIGNMENT);
-		
-		mut = new JLabel("Mutacion basica", SwingConstants.LEFT);
-		mut.setPreferredSize(new Dimension(250, 25));
-		mut.setMaximumSize(new Dimension(250, 25));
-		mut.setMinimumSize(new Dimension(250, 25));
-		mut.setAlignmentX(Component.LEFT_ALIGNMENT);
+		comboMut = new JComboBox<String>(metodMut);
+		comboMut.setPreferredSize(new Dimension(250, 25));
+		comboMut.setMaximumSize(new Dimension(250, 25));
+		comboMut.setMinimumSize(new Dimension(250, 25));
+		comboMut.setAlignmentX( Component.LEFT_ALIGNMENT);
+				
 		
 		seleccionPanel.add(labelMut);
-		seleccionPanel.add(mut);
+		seleccionPanel.add(comboMut);
 		
 		// Creamos el boton de run que ejecuta el algoritmo genetico con los parametros especificados
 		run = new JButton("Run");
@@ -319,9 +262,6 @@ public class Ventana extends JFrame {
 		// Porcentaje de elitismo
 		double pElit = Double.parseDouble(textElitismo.getText()) / 100.0;
 		
-		// Precision
-		double prec = Double.parseDouble(textPrecision.getText()) / 100.0;
-		
 		// Funcion de seleccion:
 		int posSelec = comboSelec.getSelectedIndex();
 		Seleccion fSelec;
@@ -335,53 +275,51 @@ public class Ventana extends JFrame {
 			fSelec = new Truncamiento();
 		else if (posSelec == 4)
 			fSelec = new Estocastico();
-		else
+		else if (posSelec == 5)
 			fSelec = new Restos();
+		else
+			fSelec = new Ranking();
 		
 		// Funcion de seleccion:
-		String sCruce = (String) comboCruce.getSelectedItem();
+		int sCruce = comboCruce.getSelectedIndex();
 		Cruce fCruce;
-		if (sCruce == "Monopunto")
-			fCruce = new Monopunto();
-		else if (sCruce == "Discreto uniforme")
-			fCruce = new DiscretoUniforme();
-		else if (sCruce == "Aritmetico")
-			fCruce = new Aritmetico();
-		else 
-			fCruce = new BLXAlpha();
+		if (sCruce == 0)
+			fCruce = new CiclosCX();
+		else if (sCruce == 1)
+			fCruce = new PMX();
+		else if (sCruce == 2)
+			fCruce = new OXBasico();
+		else if (sCruce == 3)
+			fCruce = new OXPosPrio();
+		else if (sCruce == 4)
+			fCruce = new OXOrdPrio();
+		else
+			fCruce = new CO();
 		
 		
-		boolean indBool = true;
 		// Funcion que se pretende optimizar
-		int posF = comboFun.getSelectedIndex();
-		Funcion f;
-		Mutacion mutar;
-		if (posF == 0) {
-			f = new Funcion1(prec);
-			mutar = new Basica(pMut);
-		}
-		else if (posF == 1) {
-			f = new Funcion2(prec);
-			mutar = new Basica(pMut);
-		}
-		else if (posF == 2) {
-			f = new Funcion3(prec);
-			mutar = new Basica(pMut);
-		}
-		else if (posF == 3) {
-			// El numero de variables
-			int n = Integer.parseInt(textNF4.getText());
-			f = new Funcion4Bool(prec, n);
-			mutar = new Basica(pMut);
-		}
-		else {
-			int n = Integer.parseInt(textNF4.getText());
-			f = new Funcion4Real(prec, n);
-			mutar = new Uniforme(pMut);
-			indBool = false;
-		}
+		int posC = comboCaso.getSelectedIndex();
+		Caso c;
+		if (posC == 0)
+			c = new Caso1();
+		else if (posC == 1)
+			c = new Caso2();
+		else 
+			c = new Caso3();
 		
-		AG = new AlgoritmoGenetico(tamPoblacion, numGen, fSelec, fCruce, mutar, pCruce, pElit, f, this, indBool);
+		// Método de mutacion
+		int posMut = comboMut.getSelectedIndex();
+		Mutacion fMut;
+		if (posMut == 0)
+			fMut = new Inversion(pMut);
+		else if (posMut == 1)
+			fMut = new Intercambio(pMut);
+		else if (posMut == 2)
+			fMut = new Heuristica(pMut);
+		else 
+			fMut = new Insercion(pMut);
+		
+		AG = new AlgoritmoGenetico(tamPoblacion, numGen, fSelec, fCruce, fMut, pCruce, pElit, c, this);
 		AG.run();
 	}
 	

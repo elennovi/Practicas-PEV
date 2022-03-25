@@ -3,7 +3,7 @@ package algoritmoGenetico.individuos;
 import algoritmoGenetico.casos.*;
 
 public abstract class Individuo {
-	private Caso c;
+	protected Caso c;
 	protected double fitness, fitDesplazado;
 	
 	public Individuo(Caso c){
@@ -26,8 +26,6 @@ public abstract class Individuo {
 	public Caso getF() {
 		return c;
 	}
-
-	public abstract double evaluaFunc();
 	
 	public double getFitness() {
 		return fitness;
