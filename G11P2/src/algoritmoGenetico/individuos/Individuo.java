@@ -37,5 +37,9 @@ public abstract class Individuo {
 	public void setFitDesplazado(double d) {
 		fitDesplazado = d;
 	}
+	
+	public String toString() {
+		return "";
+	}
 }
 

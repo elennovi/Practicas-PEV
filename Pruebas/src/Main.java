@@ -1,43 +1,30 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Main {
 	
 	public static void main(String[] args) {
-		int[] ind = new int[8];
+		int[] ind = new int[12];
 		
-		for (int i = 0; i < 8; i++) 
-			ind[i] = i + 1;
+		// Generamos una array con todos los numeros
+		List<Integer> l = new ArrayList<Integer>(12);
 		
-		System.out.println(toString(ind));
+		// Rellenamos con los numeros enteros en el intervalo 1-nVuelos
+		for (int i = 1; i <= 12; i++)
+			l.add(i);
 		
-		// Generador de numeros aleatorios
+		// Para la generacion aleatoria
 		Random rand = new Random();
 		
-		// Seleccionamos una posición aleatoria
-		int pos1 = rand.nextInt(ind.length);
-		
-		System.out.println("Hemos seleccionado la posicion: " + pos1);
-		
-		// Si elegimos la primera posicion no hay desplazamiento de ningun tipo
-		if (pos1 != 0) {
-			// Guardamos el valor en esa posición
-			int valIns = ind[pos1];
-			
-			// Seleccionamos otra posición aleatoria (previa a la seleccionada anteriormente)
-			int pos2 = rand.nextInt(pos1);
-			
-			System.out.println("Insertamos en la posicion: " + pos2);
-			
-			// Desplazamos los elementos una posición a la derecha entre pos2 y pos1
-			int ant = ind[pos2];
-			for (int p = pos2 + 1; p <= pos1; p++) {
-				int aux = ind[p];
-				ind[p] = ant;
-				ant = aux;
-			}
-			
-			// Insertamos el valor en pos2
-			ind[pos2] = valIns;
+		// Ahora vamos seleccionando posiciones aleatorias hasta que se vacie la lista
+		int cont = 0;
+		while(!l.isEmpty()) {
+			// Seleccionamos un numero aleatorio entre 0-tamaño del array
+			int pos = rand.nextInt(l.size());
+			ind[cont] = l.get(pos);
+			l.remove(pos);
+			cont++;
 		}
 		
 		System.out.println(toString(ind));

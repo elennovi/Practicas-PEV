@@ -55,7 +55,7 @@ public class AlgoritmoGenetico {
 	public void run() {
 		// Generamos la poblacion inicial aleatoriamente
 		generaPoblacionInicial();
-		
+
 		// Ahora ejecutamos el algoritmo genetico tantas veces como numGeneraciones se pidan
 		new Thread(new Runnable() {
             @Override 
@@ -70,6 +70,11 @@ public class AlgoritmoGenetico {
         }).start();
 	}
 	
+	private void mostrarPoblacion() {
+		for (Individuo i: poblacion)
+			System.out.println("Individuo: " + i.toString() + " con fitness " + i.getFitness());
+	}
+
 	public void generaPoblacionInicial() {
 		// Generamos una poblacion inicial
 		for (int i = 0; i < tamPoblacion; i++) {
@@ -85,9 +90,12 @@ public class AlgoritmoGenetico {
 		// Primero evaluamos a los individuos para actualizar su fitness
 		evaluar();
 		
+		//PROVISIONAL
+		mostrarPoblacion();
+		
 		// Desplazamiento de la aptitud para los métodos que lo requieran (ruleta, restos...)
 		calculoDesplazamiento();
-		
+				
 		// Obtener los valores para la representación gráfica (mejorGeneracion, mejorAbsoluto y la media)
 		valoresGeneracion(nGen);
 		
@@ -237,7 +245,7 @@ public class AlgoritmoGenetico {
 			if (act < mejor)
 				mejor = act;
 		}
-		if (mejor < mejorAbsoluto)
+		if (mejor < mejorAbsoluto || nGen == 0)
 			mejorAbsoluto = mejor;
 		double media = total / (double) tamPoblacion;
 		medias[nGen] = media;
