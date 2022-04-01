@@ -7,6 +7,7 @@ import algoritmoGenetico.cruce.*;
 import algoritmoGenetico.mutar.*;
 import algoritmoGenetico.seleccion.*;
 import visualizacion.Ventana;
+import visualizacion.VentanaSolucion;
 import algoritmoGenetico.casos.*;
 import algoritmoGenetico.individuos.*;
 
@@ -17,6 +18,7 @@ public class AlgoritmoGenetico {
 	private Mutacion fMutacion;
 	private Caso c;
 	
+	private Individuo mejor;
 	private double pCruce, elitismo, mejorAbsoluto;
 	private double[] generaciones, mejores, medias, mejoresAbs;
 	
@@ -65,16 +67,13 @@ public class AlgoritmoGenetico {
             	for (int i = 0; i < numGen; i++) {
                     ejecutar(i);
                 }
+            	IndividuoInt indi = (IndividuoInt) mejor.copia();
+            	new VentanaSolucion(indi.getTLAS(), indi.getLenPista(), indi.getVuelosPista(), c, indi.getFitness());
 
             }   
         }).start();
-	}
+	}	
 	
-	private void mostrarPoblacion() {
-		for (Individuo i: poblacion)
-			System.out.println("Individuo: " + i.toString() + " con fitness " + i.getFitness());
-	}
-
 	public void generaPoblacionInicial() {
 		// Generamos una poblacion inicial
 		for (int i = 0; i < tamPoblacion; i++) {
@@ -90,14 +89,15 @@ public class AlgoritmoGenetico {
 		// Primero evaluamos a los individuos para actualizar su fitness
 		evaluar();
 		
-		//PROVISIONAL
-		mostrarPoblacion();
-		
 		// Desplazamiento de la aptitud para los métodos que lo requieran (ruleta, restos...)
 		calculoDesplazamiento();
 				
 		// Obtener los valores para la representación gráfica (mejorGeneracion, mejorAbsoluto y la media)
 		valoresGeneracion(nGen);
+		
+		//IMPORTANTE QUITAR
+		IndividuoInt solParcial = (IndividuoInt) mejor.copia();
+		solParcial.getVuelosPista();
 		
 		// Nos quedamos con un array de los mejores individuos (en función del elitismo seleccionado)
 		Individuo[] elite = calculaElite();
@@ -239,14 +239,19 @@ public class AlgoritmoGenetico {
 	private void valoresGeneracion(int nGen) {
 		double mejor = poblacion[0].getFitness();
 		double total = mejor;
+		Individuo mejorPob = poblacion[0].copia();
 		for (int i = 1; i < tamPoblacion; i++) {
 			double act = poblacion[i].getFitness();
 			total += act;
-			if (act < mejor)
+			if (act < mejor) {
 				mejor = act;
+				mejorPob = poblacion[i].copia();
+			}
 		}
-		if (mejor < mejorAbsoluto || nGen == 0)
+		if (mejor < mejorAbsoluto || nGen == 0) {
 			mejorAbsoluto = mejor;
+			this.mejor = mejorPob.copia();
+		}
 		double media = total / (double) tamPoblacion;
 		medias[nGen] = media;
 		mejores[nGen] = mejor;
@@ -278,6 +283,7 @@ public class AlgoritmoGenetico {
 		for (int i = 0; i < poblacion.length; i++)
 			poblacion[i].setFitDesplazado(max * 1.05 - poblacion[i].getFitness());
 	}
+	
 
 	
 	public int getNumGen() {

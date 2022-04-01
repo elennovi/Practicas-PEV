@@ -18,7 +18,7 @@ public class PMX extends Cruce {
 		Random rand = new Random();
 		int r1 = rand.nextInt(madre.getL()), r2 = rand.nextInt(madre.getL());
 		int mayor = max(r1, r2), menor= min(r1, r2);
-		System.out.println(menor + ", " + mayor);
+		//System.out.println(menor + ", " + mayor);
 		
 		//Si los 2 puntos de cruce son el mismo, los hijos son los mismos que los padres
 		if(mayor != menor) {

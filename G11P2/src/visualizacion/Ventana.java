@@ -46,6 +46,7 @@ public class Ventana extends JFrame {
 	private static final String[] metodMut = {"Inversion", "Intercambio", "Heuristica", "Insercion"};
 	private static final String[] cs =  {"Caso 1", "Caso 2", "Caso 3"};
 	
+	
 	public Ventana(){
 		super("Algoritmo genetico");
 		initGUI();
@@ -221,6 +222,7 @@ public class Ventana extends JFrame {
 				disableButtons();
 				ejecutaAlgoritmo();
 				enableButtons();
+				
 			}
 		});
 		

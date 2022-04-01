@@ -1,7 +1,6 @@
 package algoritmoGenetico.individuos;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import algoritmoGenetico.casos.Caso;
@@ -12,24 +11,36 @@ public class IndividuoInt extends Individuo {
 	int[] valuesI;
 	// Una matriz que se corresponda con el reparto de vuelos en
 	// cada una de las pistas (de tamaño pistas x vuelos)
-	List<List<Integer>> vuelosPista;
+	int[][] vuelosPista;
+	int[] lenPistas;
+	double[] TLAs;
 	
 	public IndividuoInt(Caso c) {
 		super(c);
 		// Generamos un array de la longitud pertinente
 		valuesI = new int[c.getNVuelos()];
-		// Generamos un array con la longitud de las pistas
-		vuelosPista = new ArrayList<List<Integer>>(c.getNPistas());
 	}
 
 	public void evaluar() {
+		// Generamos un array con la longitud de las pistas
+		vuelosPista = new int[c.getNPistas()][c.getNVuelos()];
+		lenPistas = new int[c.getNPistas()];
+		for(int i = 0; i < c.getNPistas(); i++)
+			lenPistas[i] = 0;
+		
+		
+		
 		// Necesitamos saber de cada pista el TLA del último vuelo asignado y el tipo
 		// de avion 
 		double[] ultimoTLAPista = new double[c.getNPistas()];
 		int[] tipoUltimoPista = new int[c.getNPistas()];
+		for (int i = 0; i < ultimoTLAPista.length; i++) {
+			ultimoTLAPista[i] = 0;
+			tipoUltimoPista[i] = 0;
+		}
 		
 		// La lista en la que almacenamos los TLAs de todos los vuelos
-		double[] TLAs = new double[c.getNVuelos()];
+		TLAs = new double[c.getNVuelos()];
 		// La pista en la que aterriza cada vuelo
 		int[] pistaVuelos = new int[c.getNVuelos()];
 		
@@ -39,7 +50,7 @@ public class IndividuoInt extends Individuo {
 			Vuelo act = c.getVueloAt(valuesI[i] - 1);
 			// Para todas  pistas calculamos el TLA si le asignamos ese vuelo 
 			// a cada pista y nos quedamos con el mejor (menor) de todas las pistas
-			double mejorTLA = 0;
+			double mejorTLA = 999999.0;
 			// La pista en la que finalmente se dirige el vuelo
 			int pista = 0;
 			for (int j = 0; j < c.getNPistas(); j++) {
@@ -55,6 +66,8 @@ public class IndividuoInt extends Individuo {
 			// Ya hemos calculado su TLA
 			TLAs[valuesI[i] - 1] = mejorTLA;
 			pistaVuelos[valuesI[i] - 1] = pista;
+			vuelosPista[pista][lenPistas[pista]] = valuesI[i];
+			lenPistas[pista]++;
 		}
 		
 		// Ahora calculamos el fitness como la suma de la diferencia de TEL y TLA al cuadrado
@@ -71,7 +84,7 @@ public class IndividuoInt extends Individuo {
 
 	public void initGenesAleatorio() {
 		// Generamos una array con todos los numeros
-		List<Integer> l = new ArrayList<Integer>(c.getNVuelos());
+		ArrayList<Integer> l = new ArrayList<Integer>(c.getNVuelos());
 		
 		// Rellenamos con los numeros enteros en el intervalo 1-nVuelos
 		for (int i = 1; i <= c.getNVuelos(); i++)
@@ -95,9 +108,36 @@ public class IndividuoInt extends Individuo {
 		IndividuoInt nuevo = new IndividuoInt(c);
 		for (int i = 0; i < valuesI.length; i++)
 			nuevo.setAt(i, valuesI[i]);
+		nuevo.setVuelosPista(vuelosPista, lenPistas);
+		nuevo.setFitness(fitness);
+		nuevo.setFitDesplazado(fitDesplazado);
+		nuevo.setTLAs(TLAs);
 		return nuevo;
 	}
-	
+
+	private void setTLAs(double[] tLAs2) {
+		double[] auxTLAs = new double[c.getNVuelos()];
+		for(int i = 0; i < c.getNVuelos(); i++)
+			auxTLAs[i] = tLAs2[i];
+		this.TLAs = auxTLAs;
+	}
+
+	private void setFitness(double fitness) {
+		this.fitness = fitness;
+	}
+
+	public void setVuelosPista(int[][] vuelosPista, int[] lenPistas) {
+		int [][] auxVuelos = new int[c.getNPistas()][c.getNVuelos()];
+		for(int i = 0; i < c.getNPistas(); i++)
+			for(int j = 0; j < lenPistas[i]; j++)
+				auxVuelos[i][j] = vuelosPista[i][j];
+		int[] auxLen = new int[c.getNPistas()];
+		for(int i = 0; i < c.getNPistas(); i++)
+			auxLen[i] = lenPistas[i];
+		this.vuelosPista = auxVuelos;
+		this.lenPistas = lenPistas;
+	}
+
 	public int getAt(int pos) {
 		return valuesI[pos];
 	}
@@ -127,7 +167,17 @@ public class IndividuoInt extends Individuo {
 		return s;
 	}
 	
-	public List<List<Integer>> repartoVuelos(){
+	public int[][] getVuelosPista(){
 		return vuelosPista;
 	}
+	
+	public int[] getLenPista(){
+		return lenPistas;
+	}
+	
+	
+	public double[] getTLAS(){
+		return TLAs;
+	}
+	
 }

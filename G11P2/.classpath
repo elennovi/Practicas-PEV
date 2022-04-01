@@ -6,6 +6,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/elena/PEV/G11P2/src/visualizacion/jmathplot.jar"/>
+	<classpathentry kind="lib" path="src/visualizacion/jmathplot.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
