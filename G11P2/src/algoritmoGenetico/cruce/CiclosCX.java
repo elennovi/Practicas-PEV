@@ -25,7 +25,7 @@ public class CiclosCX extends Cruce {
 		Caso c = main.getF();
 		
 		// Creamos al individuo que vamos a generar
-		IndividuoInt ind = new IndividuoInt(c);
+		IndividuoInt ind = (IndividuoInt) main.copia();
 		
 		// Inicializamos todo su array a -1 (servirá para identificar las posiciones todavía no completadas)
 		for (int i = 0; i < ind.getL(); i++) 
