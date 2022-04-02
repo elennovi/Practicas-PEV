@@ -36,15 +36,15 @@ public class Ventana extends JFrame {
 	private JPanel mainPanel;
 	private JPanel seleccionPanel;
 	
-	private JTextArea textTam, textNGen, textCruce, textMutacion, textElitismo;
+	private JTextArea textTam, textNGen, textCruce, textMutacion, textElitismo, textSemilla;
 	private JComboBox<String> comboSelec, comboCruce, comboCaso, comboMut;
 	
-	private static final String TAM_POBLACION = "100", NUM_GENERACIONES = "100";
+	private static final String TAM_POBLACION = "100", NUM_GENERACIONES = "100", SEMILLA = "0";
 	private static final String PORCENTAJE_CRUCE = "60", PORCENTAJE_MUTACION = "5", PORCENTAJE_ELITISMO = "0";
 	private static final String[] metodSel =  {"Ruleta", "Torneo deterministico", "Torneo probabilistico", "Truncamiento", "Estocastico", "Restos", "Ranking"};
 	private static final String[] metodCruceInt =  {"CX", "PMX", "OX basico", "OX posiciones prioritarias", "OX orden prioritario", "CO"};
 	private static final String[] metodMut = {"Inversion", "Intercambio", "Heuristica", "Insercion"};
-	private static final String[] cs =  {"Caso 1", "Caso 2", "Caso 3"};
+	private static final String[] cs =  {"Caso 1", "Caso 2", "Caso aleatorio"};
 	
 	
 	public Ventana(){
@@ -187,11 +187,34 @@ public class Ventana extends JFrame {
 		comboCaso.setPreferredSize(new Dimension(250, 25));
 		comboCaso.setMaximumSize(new Dimension(250, 25));
 		comboCaso.setMinimumSize(new Dimension(250, 25));
-		comboCaso.setAlignmentX( Component.LEFT_ALIGNMENT);
-
+		comboCaso.setAlignmentX(Component.LEFT_ALIGNMENT);
+		comboCaso.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Si seleccionamos el caso 3 hay que habilitar el texto para que se pueda cambiar la semilla
+				if (comboCaso.getSelectedIndex() == 2)
+					textSemilla.setEditable(true);
+				else
+					textSemilla.setEditable(false);
+			}
+		});
 		
 		seleccionPanel.add(labelc);
 		seleccionPanel.add(comboCaso);
+		
+		// Un area de texto para la seleccion de la semilla
+		JLabel labelSem = new JLabel("Semilla para el Caso aleatorio: ", SwingConstants.LEFT);
+		labelSem.setPreferredSize(new Dimension(250, 25));
+		labelSem.setMaximumSize(new Dimension(250, 25));
+		labelSem.setMinimumSize(new Dimension(250, 25));
+		textSemilla = new JTextArea(SEMILLA);
+		textSemilla.setPreferredSize(new Dimension(250, 25));
+		textSemilla.setMaximumSize(new Dimension(250, 25));
+		textSemilla.setMinimumSize(new Dimension(250, 25));
+		textSemilla.setAlignmentX(Component.LEFT_ALIGNMENT);
+		textSemilla.setEditable(false); // Al principio no se puede editar
+		
+		seleccionPanel.add(labelSem);
+		seleccionPanel.add(textSemilla);
 		
 		// Combobox para la mutacion:
 		JLabel labelMut= new JLabel("Metodo de mutacion: ", SwingConstants.LEFT);
@@ -306,22 +329,25 @@ public class Ventana extends JFrame {
 			c = new Caso1();
 		else if (posC == 1)
 			c = new Caso2();
-		else 
-			c = new Caso3();
+		else {
+			// Como es el caso aleatorio hay que sacar el valor de la semilla
+			int sem = Integer.parseInt(textSemilla.getText());
+			c = new Caso3(sem);
+		}
 		
 		// Método de mutacion
 		int posMut = comboMut.getSelectedIndex();
 		Mutacion fMut;
 		if (posMut == 0)
-			fMut = new Inversion(pMut);
+			fMut = new Inversion();
 		else if (posMut == 1)
-			fMut = new Intercambio(pMut);
+			fMut = new Intercambio();
 		else if (posMut == 2)
-			fMut = new Heuristica(pMut);
+			fMut = new Heuristica();
 		else 
-			fMut = new Insercion(pMut);
+			fMut = new Insercion();
 		
-		AG = new AlgoritmoGenetico(tamPoblacion, numGen, fSelec, fCruce, fMut, pCruce, pElit, c, this);
+		AG = new AlgoritmoGenetico(tamPoblacion, numGen, fSelec, fCruce, fMut, pCruce, pMut, pElit, c, this);
 		AG.run();
 	}
 	

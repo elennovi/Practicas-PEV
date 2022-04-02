@@ -9,10 +9,6 @@ public class Heuristica extends Mutacion {
 	
 	private static final int n = 3; //Numero de genes a mutar
 
-	public Heuristica(double p) {
-		super(p);
-	}
-
 	@Override
 	public void mutar(Individuo i) {
 		IndividuoInt indi = (IndividuoInt) i;

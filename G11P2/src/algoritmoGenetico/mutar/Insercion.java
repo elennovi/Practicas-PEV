@@ -7,10 +7,6 @@ import algoritmoGenetico.individuos.IndividuoInt;
 
 public class Insercion extends Mutacion {
 
-	public Insercion(double p) {
-		super(p);
-	}
-
 	public void mutar(Individuo i) {
 		IndividuoInt ind = (IndividuoInt) i;
 		

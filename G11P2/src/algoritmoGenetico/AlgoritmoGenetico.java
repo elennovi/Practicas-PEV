@@ -19,7 +19,7 @@ public class AlgoritmoGenetico {
 	private Caso c;
 	
 	private Individuo mejor;
-	private double pCruce, elitismo, mejorAbsoluto;
+	private double pCruce, pMut, elitismo, mejorAbsoluto;
 	private double[] generaciones, mejores, medias, mejoresAbs;
 	
 	private int tamPoblacion, numGen, numElite;
@@ -28,9 +28,10 @@ public class AlgoritmoGenetico {
 	
 	
 	public AlgoritmoGenetico(int tamPoblacion, int numGen, Seleccion fSelec, Cruce fCruce, Mutacion fMutacion, 
-			double pCruce, double elitismo, Caso c, Ventana window) {
+			double pCruce, double pMut, double elitismo, Caso c, Ventana window) {
 		this.tamPoblacion = tamPoblacion;
 		this.numGen = numGen;
+		this.pMut = pMut;
 		this.fSelec = fSelec;
 		this.fCruce = fCruce;
 		this.fMutacion = fMutacion;
@@ -152,8 +153,10 @@ public class AlgoritmoGenetico {
 		// Mutamos sobre el array de seleccionados en funcion de la probabilidad de mutacion
 		for (int i = 0; i < tamPoblacion;i++) {
 			// Si debe mutar
-			fMutacion.mutar(seleccionados[i]);
-			seleccionados[i].evaluar();
+			if (Math.random() <= pMut) {
+				fMutacion.mutar(seleccionados[i]);
+				seleccionados[i].evaluar();
+			}
 		}
 	}
 

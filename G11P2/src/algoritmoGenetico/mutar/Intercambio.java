@@ -6,11 +6,7 @@ import algoritmoGenetico.individuos.Individuo;
 import algoritmoGenetico.individuos.IndividuoInt;
 
 public class Intercambio extends Mutacion {
-
-	public Intercambio(double p) {
-		super(p);
-	}
-
+	
 	public void mutar(Individuo i) {
 		IndividuoInt ind = (IndividuoInt) i;
 		
