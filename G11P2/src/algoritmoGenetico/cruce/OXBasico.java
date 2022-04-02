@@ -32,9 +32,6 @@ public class OXBasico extends Cruce{
 		if(contHijo >= hijos[0].getL())
 			contHijo = 0;
 		
-
-		System.out.println(menor+" "+mayor);
-		
 		if(mayor != menor) {
 			while(contHijo != limit) {
 	
