@@ -153,6 +153,7 @@ public class AlgoritmoGenetico {
 		for (int i = 0; i < tamPoblacion;i++) {
 			// Si debe mutar
 			fMutacion.mutar(seleccionados[i]);
+			seleccionados[i].evaluar();
 		}
 	}
 
@@ -183,7 +184,9 @@ public class AlgoritmoGenetico {
 		for (int i = 0; i < numCruzan; i += 2) {
 			Individuo[] hijos;
 			hijos = fCruce.cruzar((IndividuoInt) cruzan[i], (IndividuoInt) cruzan[i + 1]);
-			
+			// Ahora evaluamos a los hijos de nuevo para que recalculen su fitness
+			hijos[0].evaluar();
+			hijos[1].evaluar();
 			// Nos quedamos con los hijos siempre independientemente de si son peores
 			// que sus padres 
 			seleccionados[posiciones[i]] = (Individuo) hijos[0];
