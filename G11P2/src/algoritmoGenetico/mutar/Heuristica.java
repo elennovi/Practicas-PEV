@@ -24,8 +24,6 @@ public class Heuristica extends Mutacion {
 			orden[j] = elem[j];
 		}
 		
-		System.out.println(elem[0] + " " + elem[1] + " " + elem[2]);
-		
 		
 		IndividuoInt auxiliar = (IndividuoInt) indi.copia();
 		double mejor = auxiliar.getFitness();
