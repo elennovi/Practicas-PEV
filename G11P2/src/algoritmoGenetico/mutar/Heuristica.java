@@ -1,5 +1,6 @@
 package algoritmoGenetico.mutar;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import algoritmoGenetico.individuos.Individuo;
@@ -14,14 +15,29 @@ public class Heuristica extends Mutacion {
 		IndividuoInt indi = (IndividuoInt) i;
 		
 		// Generamos las 3 posiciones a mutar y guardamos el número de vuelo correspondiente
-		Random rand = new Random();
 		int [] pos = new int[n];//Posiciones aleatorias
 		int [] elem = new int[n];//Elemenetos en esas posiciones
 		int[] orden = new int[n];//Orden final, inicializado al actual.
-		for(int j = 0; j < n; j++) {
-			pos[j] = rand.nextInt(i.getL());
-			elem[j] = indi.getAt(pos[j]);
-			orden[j] = elem[j];
+		
+		// Ahora generamos una lista ordenada de todos los posibles valores de las posiciones
+		ArrayList<Integer> lOrdenada = new ArrayList<Integer>(indi.getL());
+		
+		// Rellenamos con los numeros enteros en el intervalo 0-(nVuelos - 1)
+		for (int h = 0; h < indi.getL(); h++)
+			lOrdenada.add(h);
+		
+		// Ahora seleccionamos las posiciones aleatoriamente
+		Random rand = new Random();
+		for (int h = 0; h < n; h++) {
+			int aleat = rand.nextInt(lOrdenada.size());
+			pos[h] = lOrdenada.get(aleat);
+			lOrdenada.remove(aleat); // Eliminamos esa posicion
+		}
+		
+		// Los valores que se encunetran en las posiciones dadas 
+		for (int h = 0; h < n; h++) {
+			elem[h] = indi.getAt(pos[h]);
+			orden[h] = elem[h];
 		}
 		
 		

@@ -14,7 +14,7 @@ public class Caso2 extends Caso {
 	
 	
 	public Caso2() {
-	// Rellenamos la información relativa a los vuelos en las variables de la superclase
+		// Rellenamos la información relativa a los vuelos en las variables de la superclase
 		super.nVuelos = NUM_VUELOS;
 		super.nPistas = NUM_PISTAS;
 		super.matrizTEL = MATRIZ_TEL;
