@@ -22,12 +22,11 @@ public class IndividuoInt extends Individuo {
 		String[] aPalabras = (this.toString()).split(" ");
 		List<String> lPalabras = new ArrayList<String>(); 
 		
-		// Copiamos las palabras a una lista dinamica
-		for (String p: aPalabras)
-			lPalabras.add(p);
-		
 		// Recorremos todas las posibilidades de valores de entrada y contamos los aciertos o fallos
 		for (int i = 0; i < Math.pow(2, m.getEntradas() + m.getSalidas()); i++) {
+			// Copiamos las palabras a una lista dinamica
+			for (String p: aPalabras)
+				lPalabras.add(p);
 			boolean[] inOut = this.dec2bin(i, m.getEntradas() + m.getSalidas());
 			boolean sol = this.getValueFor(inOut, lPalabras);
 			// Solo si la solucion real es la misma que la obtenida por la gramatica decodificada

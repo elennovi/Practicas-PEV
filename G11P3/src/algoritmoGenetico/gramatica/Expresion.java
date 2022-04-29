@@ -20,11 +20,11 @@ public class Expresion {
 	public String getExpresion() {
 		String str = "";
 		int pos;
+		actual.siguientePos();
 		if(actual.getPosCodon() != -1)
 			pos = individuo.getAt(actual.getPosCodon()) % (NUM_EXPRESIONES + numTerminales);
 		else
 			pos = -1;
-		actual.siguientePos();
 		if (pos == AND) { // Si ha tocado poner un and lo añadimos y continuamos
 			str = "(AND ";
 			str += (new Expresion(individuo, actual)).getExpresion();
@@ -53,6 +53,8 @@ public class Expresion {
 			str += (new Expresion(individuo, actual)).getExpresion();
 			str += " )";
 		}
+		else if (pos == -1)
+			str += "A0";
 		else if (pos < NUM_EXPRESIONES + numEntradas)
 			str += "A" + (pos - NUM_EXPRESIONES);
 		else 

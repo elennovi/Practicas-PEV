@@ -118,6 +118,10 @@ public class AlgoritmoGenetico {
 		// Actualizamos la poblacion con los individuos seleccionados despues de haber pasado por todas las
 		// fases del algoritmo genetico
 		poblacion = seleccionados;
+		
+		// Vamos a recalcular la poblacion cada 50 generaciones de modo que se creen nuevos individuos
+		if ((nGen + 1) % 50 == 0)
+			generaPoblacionInicial();
 	}
 	
 	private void introducirElite(Individuo[] seleccionados, Individuo[] elite) {
@@ -246,12 +250,12 @@ public class AlgoritmoGenetico {
 		for (int i = 1; i < tamPoblacion; i++) {
 			double act = poblacion[i].getFitness();
 			total += act;
-			if (act < mejor) {
+			if (act > mejor) {
 				mejor = act;
 				mejorPob = poblacion[i].copia();
 			}
 		}
-		if (mejor < mejorAbsoluto || nGen == 0) {
+		if (mejor > mejorAbsoluto || nGen == 0) {
 			mejorAbsoluto = mejor;
 			this.mejor = mejorPob.copia();
 		}
@@ -269,24 +273,10 @@ public class AlgoritmoGenetico {
 	
 	// Funcion que calcula el fitness adaptado
 	private void calculoDesplazamiento() {
-		// Ahora tenemos que evaluar todos los individuos mientras nos quedamos
-		// con el fitness total conseguido
-		double max = poblacion[0].getFitness();
-		double min = max;
-		for (int i = 1; i < poblacion.length; i++) {
-			double ev = poblacion[i].getFitness();
-			// Comprobamos si es el nuevo maximo
-			if (max < ev)
-				max = ev;
-			if (min > ev)
-				min = ev;
-		}
-		
-		// Desplazamiento de la aptitud utilizando el valor maximo
+		// En este caso el fitness adaptado es el mismo pues no podemos obtener valores negativos
 		for (int i = 0; i < poblacion.length; i++)
-			poblacion[i].setFitDesplazado(max * 1.05 - poblacion[i].getFitness());
+			poblacion[i].setFitDesplazado(poblacion[i].getFitness());
 	}
-	
 
 	
 	public int getNumGen() {

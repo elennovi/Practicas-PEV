@@ -27,9 +27,8 @@ public class TorneoProbabilistico extends Seleccion{
 		double ev1 = uno.getFitness(), ev2 = dos.getFitness(), ev3 = tres.getFitness();
 		double d = Math.random();
 
-		//Si nosquedamos con el mejor
-		if( d > p) {
-			//El mejor depende de si se quiere maximizar o minimizar
+		//Si nosquedamos con el peor
+		if( d < p) {
 			if(ev1 < ev2 && ev1 < ev3)
 				return uno;
 			else if(ev2 < ev1 && ev2 < ev3)
@@ -37,9 +36,8 @@ public class TorneoProbabilistico extends Seleccion{
 			return tres;
 		}
 		
-		//Si nos quedamos con el peor
+		//Si nos quedamos con el mejor
 		else {
-			//El peor depende de si se quiere maximizar o minimizar
 			if(ev1 > ev2 && ev1 > ev3)
 				return uno;
 			else if(ev2 > ev1 && ev2 > ev3)

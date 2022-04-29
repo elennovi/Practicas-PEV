@@ -12,18 +12,19 @@ public class Estado {
 	}
 	
 	public void siguientePos() {
-		posCodon++;
-		if (nCodones <= posCodon) {
-			if (siguienteWrap())
-				posCodon = 0;
-			else
-				posCodon = -1;
+		if (posCodon != -1) {
+			posCodon++;
+			if (nCodones <= posCodon) {
+				if (siguienteWrap())
+					posCodon = 0;
+				else
+					posCodon = -1;
+			}
 		}
-
 	}
 	
 	private boolean siguienteWrap() {
-		if (wrapsRestantes < 0)
+		if (wrapsRestantes <= 0)
 			return false;
 		wrapsRestantes--;
 		return true;

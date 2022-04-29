@@ -1,7 +1,7 @@
 package algoritmoGenetico.multiplexores;
 
 public abstract class Multiplexor {
-	private static final int MAX_NUM_CODONES = 500;
+	private static final int MAX_NUM_CODONES = 256;
 	
 	private int nCodones;
 	private int nWraps;

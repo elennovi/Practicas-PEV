@@ -19,7 +19,7 @@ public class Ruleta extends Seleccion{
 		double[] proporciones = new double[poblacion.length];
 		int cont = 0;
 		for (Individuo i: poblacion) {
-			// El mejor fitness es el mas grande si estabamos minimizando
+			// El mejor fitness es el mas grande
 			proporciones[cont] = i.getFitDesplazado() / total;
 			cont++;
 		}

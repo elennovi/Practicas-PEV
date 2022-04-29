@@ -23,7 +23,7 @@ public class Estocastico extends Seleccion {
 		double[] proporciones = new double[poblacion.length];
 		int cont = 0;
 		for (Individuo i: poblacion) {
-			// El mejor fitness es el mas grande si estabamos minimizando
+			// El mejor fitness es el mas grande
 			proporciones[cont] = i.getFitDesplazado() / total;
 			cont++;
 		}
@@ -36,13 +36,13 @@ public class Estocastico extends Seleccion {
 		
 		// Calculamos la distancia entre las marcas
 		double dist = (double) (1) / (double) (seleccionados);
-		// Calculamos el número como un entero multiplicandolo por 100
-		int maxSobre100 = (int) (dist * 100);
-		// Calculamos ahora un número aleatorio entre 0 y el numero maximo sobre 100
+		// Calculamos el número como un entero multiplicandolo por el numero de seleccionados
+		int maxSobreN = (int) (dist * seleccionados);
+		// Calculamos ahora un número aleatorio entre 0 y el numero maximo sobre N
 		Random rand = new Random();
-		int randSobre100 = rand.nextInt(maxSobre100);
-		// Lo convertimos a un valor sobre 100
-		double r =  (double) (randSobre100) / (double) (100);
+		int randSobreN = rand.nextInt(maxSobreN);
+		// Lo convertimos a un valor sobre N
+		double r =  (double) (randSobreN) / (double) (seleccionados);
 		
 		// Calculamos las marcas
 		double[] marcas = new double[seleccionados];

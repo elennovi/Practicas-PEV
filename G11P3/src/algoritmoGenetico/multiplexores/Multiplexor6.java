@@ -9,7 +9,6 @@ public class Multiplexor6 extends Multiplexor {
 		super(NUM_CODONES, wraps, NUM_ENTRADAS, NUM_SALIDAS);
 	}
 
-	@Override
 	public boolean esValida(boolean[] parametros) {
 		if (!parametros[0] && !parametros[1] && parametros[2]) return true;
 		else if (!parametros[0] && parametros[1] && parametros[3]) return true;

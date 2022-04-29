@@ -28,9 +28,9 @@ public class TorneoDeterministico extends Seleccion{
 
 		//Nos quedamos siempre con el mejor
 		//El mejor depende de si se quiere maximizar o minimizar
-		if(ev1 < ev2 && ev1 < ev3 )
+		if(ev1 > ev2 && ev1 > ev3 )
 			return uno;
-		else if(ev2 < ev1 && ev2 < ev3)
+		else if(ev2 > ev1 && ev2 > ev3)
 			return dos;
 		return tres;
 	}
