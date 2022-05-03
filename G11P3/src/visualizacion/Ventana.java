@@ -39,7 +39,7 @@ public class Ventana extends JFrame {
 	private JTextArea textTam, textNGen, textCruce, textMutacion, textElitismo, textWraps;
 	private JComboBox<String> comboSelec, comboCruce, comboCaso;
 	
-	private static final String TAM_POBLACION = "100", NUM_GENERACIONES = "100", WRAPS = "2";
+	private static final String TAM_POBLACION = "100", NUM_GENERACIONES = "100", WRAPS = "0";
 	private static final String PORCENTAJE_CRUCE = "60", PORCENTAJE_MUTACION = "5", PORCENTAJE_ELITISMO = "0";
 	private static final String[] metodSel =  {"Ruleta", "Torneo deterministico", "Torneo probabilistico", "Truncamiento", "Estocastico", "Restos", "Ranking"};
 	private static final String[] metodCruceInt =  {"Monopunto", "Discreto uniforme"};

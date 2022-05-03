@@ -63,6 +63,7 @@ public class IndividuoInt extends Individuo {
 		IndividuoInt nuevo = new IndividuoInt(m);
 		for (int i = 0; i < valuesI.length; i++)
 			nuevo.setAt(i, valuesI[i]);
+		nuevo.evaluar();
 		return nuevo;
 	}
 

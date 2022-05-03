@@ -20,7 +20,7 @@ public class AlgoritmoGenetico {
 	private Multiplexor m;
 	
 	private Individuo mejor;
-	private double pCruce, pMut, elitismo, mejorAbsoluto;
+	private double pCruce, pMut, elitismo, mejorAbsoluto = 0.0;
 	private double[] generaciones, mejores, medias, mejoresAbs;
 	
 	private int tamPoblacion, numGen, numElite;
@@ -64,13 +64,11 @@ public class AlgoritmoGenetico {
             @Override 
             public void run() 
             {
-
-            	for (int i = 0; i < numGen; i++) {
+            	for (int i = 0; i < numGen; i++)
                     ejecutar(i);
-                }
             	IndividuoInt indi = (IndividuoInt) mejor.copia();
-            	JOptionPane.showMessageDialog(window, indi.toString());
-
+            	JOptionPane.showMessageDialog(window,"Expresion: " +  indi.toString() + "\n" +
+            										 "Fitness: " + indi.getFitness());
             }   
         }).start();
 	}	
@@ -83,7 +81,6 @@ public class AlgoritmoGenetico {
 			// LLamamos a la función que lo genera aleatoriamente
 			ind.initGenesAleatorio();
 			poblacion[i] = ind;
-			System.out.println("El individuo: " + i + " es: " + poblacion[i].toString());
 		}
 	}
 	
@@ -112,6 +109,13 @@ public class AlgoritmoGenetico {
 		// Mutamos a los individuos
 		mutar(seleccionados);
 		
+		// Vamos a recalcular la poblacion cada 50 generaciones de modo que se creen nuevos individuos
+		if ((nGen + 1) % 50 == 0) {
+			generaPoblacionInicial();
+			// Los seleccionados son precisamente la nueva poblacion
+			seleccionados = poblacion; 
+		}
+		
 		// Reintroducimos la elite en los seleccionados
 		introducirElite(seleccionados, elite);
 		
@@ -119,9 +123,6 @@ public class AlgoritmoGenetico {
 		// fases del algoritmo genetico
 		poblacion = seleccionados;
 		
-		// Vamos a recalcular la poblacion cada 50 generaciones de modo que se creen nuevos individuos
-		if ((nGen + 1) % 50 == 0)
-			generaPoblacionInicial();
 	}
 	
 	private void introducirElite(Individuo[] seleccionados, Individuo[] elite) {
@@ -255,7 +256,7 @@ public class AlgoritmoGenetico {
 				mejorPob = poblacion[i].copia();
 			}
 		}
-		if (mejor > mejorAbsoluto || nGen == 0) {
+		if (nGen == 0 || mejor > mejorAbsoluto) {
 			mejorAbsoluto = mejor;
 			this.mejor = mejorPob.copia();
 		}
